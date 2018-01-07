@@ -1,0 +1,29 @@
+{
+  "compilerOptions": {
+    "baseUrl": "./prifender.index",
+    "emitDecoratorMetadata": true,
+    "experimentalDecorators": true,
+    "module": "commonjs",
+    "moduleResolution": "node",
+    "noImplicitAny": false,
+    "target": "es6",
+    "lib": ["es6"],
+    "sourceMap": true,
+
+    "declaration": false,
+    "removeComments": true,
+    "noLib": false,
+    "listFiles": false
+
+  },
+  "filesGlob": [
+    "./**/*.ts"
+  ],
+  "atom": {
+    "rewriteTsconfig": true,
+    "formatOnSave": true
+  },
+  "exclude": [
+    "node_modules"
+  ]
+}
