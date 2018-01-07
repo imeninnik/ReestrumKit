@@ -1,12 +1,15 @@
 import * as glob from 'glob';
+import * as http from 'http';
 import * as express from 'express';
 import * as bodyParser from 'body-parser';
 import { IRestRule, IRestRulesBase } from './restServer.interfaces';
-import Throw = Chai.Throw;
+
 
 export default class Server {
     public fullAPIPath: string = '';
     private expressApp: express.Application;
+    private server/*:http.Server*/;
+
 
     constructor(
         private port: number = 8082,
@@ -22,16 +25,37 @@ export default class Server {
     public async init() {
 
         this.expressApp.set('port', this.port);
+        this.server = http.createServer(this.expressApp);
+
+
         this.initMiddleware();
         this.initRoutes();
-        this.start()
+        return this.start();
+
+
+
     }
 
 
-    public start() {
-        this.expressApp.listen(this.port, () => {
-            console.info(`Server listening on port ${this.port}`);
+    public async start() {
+        return new Promise((resolve, reject) => {
+
+            this.server.listen(this.port);
+            this.server.on("error", (err: Error) => {
+                console.error("#RestServerClass > Error starting server" + err);
+                reject(err)
+            });
+
+            this.server.on("listening", () => {
+                console.log("#RestServerClass > Server started on port " + this.port);
+                return resolve();
+            });
         });
+
+    }
+
+    public stop() {
+        this.server.close();
     }
 
     private initMiddleware(): void {

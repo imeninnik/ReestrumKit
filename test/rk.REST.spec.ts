@@ -29,12 +29,10 @@ describe('Reestrum Kit Instances', function() {
             port: PORT,
             apiVersion: API_VERSION,
             apiPath: API_PATH,
-            basePathToRESTFolder:'./../REST/'
         };
         const restServerSettings2 = {
-            port: PORT,
+            port: PORT+1,
             apiPath: '',
-            basePathToRESTFolder:'./../REST/'
         };
 
         const r1 = new ReestrumKit(serviceName,{ restServer:restServerSettings1 });
@@ -43,11 +41,15 @@ describe('Reestrum Kit Instances', function() {
         await r1.init();
         await r2.init();
 
+
         expect(r1.name).to.equal(serviceName);
         expect(r2.name).to.equal(serviceName);
 
-        expect(r1.restServer.fullAPIPath).to.equal(`/${API_PATH}/${API_VERSION}/`);
-        expect(r2.restServer.fullAPIPath).to.equal(`/${DEFAULT_VERSION}/`);
+        expect(r1.restServer.fullAPIPath).to.equal(`/${API_PATH}/${API_VERSION}`);
+        expect(r2.restServer.fullAPIPath).to.equal(`/${DEFAULT_VERSION}`);
+
+        await r1.die();
+        await r2.die();
 
     });
 
@@ -83,11 +85,10 @@ describe('Reestrum Kit Instances', function() {
         expect(testNotRootResponse.body.success).to.equal(true);
         expect(testNotRootResponse.body.message).to.equal('notRoot');
 
+        await r.die();
+
 
     });
-
-// http://localhost:8000/api-path/api-version/test
-// http://localhost:9000/api-path/api-version/test
 
 
 });

@@ -25,4 +25,9 @@ export default class ReestrumKit {
         return DAL.Init(this.settings.dal);
 
     }
+
+    public async die() {
+        this.restServer.stop();
+
+    }
 }
