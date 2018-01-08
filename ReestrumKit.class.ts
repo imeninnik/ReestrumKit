@@ -21,8 +21,9 @@ export default class ReestrumKit {
         const s:restI.IRestServerOptions = this.settings.restServer;
 
         this.restServer = new Server(this, s.port ,s.apiPath,s.apiVersion,s.basePathToRESTFolder);
-        this.restServer.init();
-        return DAL.Init(this.settings.dal);
+        await this.restServer.init();
+        await DAL.Init(this.settings.dal);
+        return;
 
     }
 
