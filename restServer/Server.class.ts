@@ -102,13 +102,10 @@ export default class Server {
                         );
 
                     });
-                });
 
-
-                setTimeout(() => {
                     return resolve();
-                }, 2000);
 
+                });
 
             });
 

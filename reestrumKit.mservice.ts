@@ -16,5 +16,7 @@ async function run() {
     const r = new ReestrumKit(serviceName,{ restServer:restServerSettings });
 
     await r.init();
+
+    console.log(2111);
 }
 
