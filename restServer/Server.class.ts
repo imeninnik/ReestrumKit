@@ -30,7 +30,7 @@ export default class Server {
 
 
         this.initMiddleware();
-        this.initRoutes();
+        await this.initRoutes();
         return this.start();
 
 
@@ -88,14 +88,14 @@ export default class Server {
 
                 console.log(`\n\n==== Apply REST Rules`);
                 requireFiles.forEach((rq:IRestRulesBase) => {
-                    rq.restRules.forEach(async (restRule:IRestRule) => {
+                    rq.restRules.forEach((restRule:IRestRule) => {
                         const basePath = restRule.basePath ? `/${restRule.basePath}/` : '/';
 
                         const finalPath = this.fullAPIPath + basePath+restRule.path;
 
                         console.log(`REST > ${restRule.method} > ${finalPath} \t (${restRule.description})`);
 
-                        await this.addRoutes(
+                        this.addRoutes(
                             restRule.method,
                             finalPath,
                             restRule.controller(this.rkInstance)
@@ -105,7 +105,6 @@ export default class Server {
                 });
 
                 return resolve();
-
 
             });
 
@@ -122,7 +121,7 @@ export default class Server {
 
     }
 
-    private async addRoutes(method:string = 'post', route: string, handler: Function) {
-       return this.expressApp[method](`${route}`, handler);
+    private addRoutes(method:string = 'post', route: string, handler: Function): void {
+        this.expressApp[method](`${route}`, handler);
     }
 }
