@@ -104,7 +104,11 @@ export default class Server {
                     });
                 });
 
-                return resolve();
+
+                setTimeout(() => {
+                    return resolve();
+                }, 2000);
+
 
             });
 
