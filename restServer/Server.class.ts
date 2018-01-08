@@ -12,6 +12,7 @@ export default class Server {
 
 
     constructor(
+        private rkInstance: any,
         private port: number = 8082,
         private apiPath: string = 'api',
         private apiVersion: string = 'v1',
@@ -64,46 +65,50 @@ export default class Server {
     }
 
     private async initRoutes() {
-        let requireFiles = [];
+        return new Promise((resolve, reject) => {
+            let requireFiles = [];
 
-        this.expressApp.get('/', (req, res, next) => {
-            res.json({
-                success: true,
-                message: `API base path ${this.fullAPIPath}`
-            });
-        });
-
-
-        glob(`${this.basePathToRESTFolder}/**/*.rest.ts`, {absolute:true}, (err, files) => {
-            if (err || !files.length) {
-                console.error(err||'no rest files!');
-                return;
-            }
-
-            files.forEach((f,i) => {
-                requireFiles[i] = require(f)
-            });
-
-            requireFiles.forEach((rq:IRestRulesBase) => {
-                rq.restRules.forEach((restRule:IRestRule) => {
-                    const basePath = restRule.basePath ? `/${restRule.basePath}/` : '/';
-
-                    const finalPath = this.fullAPIPath + basePath+restRule.path;
-
-                    console.log(`\n\n REST > ${restRule.method} > ${finalPath} \t (${restRule.description})`);
-
-                    this.addRoutes(
-                        restRule.method,
-                        finalPath,
-                        restRule.controller
-                    )
+            this.expressApp.get('/', (req, res, next) => {
+                res.json({
+                    success: true,
+                    message: `API base path ${this.fullAPIPath}`
                 });
             });
 
 
+            glob(`${this.basePathToRESTFolder}/**/*.rest.ts`, {absolute:true}, (err, files) => {
+                if (err || !files.length) {
+                    console.error(err||'no rest files!');
+                    return;
+                }
+
+                files.forEach((f,i) => {
+                    requireFiles[i] = require(f)
+                });
+
+                console.log(`\n\n==== Apply REST Rules`);
+                requireFiles.forEach((rq:IRestRulesBase) => {
+                    rq.restRules.forEach((restRule:IRestRule) => {
+                        const basePath = restRule.basePath ? `/${restRule.basePath}/` : '/';
+
+                        const finalPath = this.fullAPIPath + basePath+restRule.path;
+
+                        console.log(`REST > ${restRule.method} > ${finalPath} \t (${restRule.description})`);
+
+                        this.addRoutes(
+                            restRule.method,
+                            finalPath,
+                            restRule.controller(this.rkInstance)
+                        );
+
+                        return resolve();
+                    });
+                });
+
+
+            });
+
         });
-
-
 
     }
 

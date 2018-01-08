@@ -8,19 +8,24 @@ export const restRules = [
         method: 'get',
         basePath,
         path: ``,
-        controller: function(req, res, next) {
-            return res.send({success:true, message: 'root'});
+        controller: function(rkInstance)  {
+             return (req, res, next)  => {
+                return res.send({success:true, message: 'root'});
 
+            }
         }
+
     },
     {
         description:'test/not-root',
         method: 'get',
         basePath,
         path: `not-root`,
-        controller: function(req, res, next) {
-            return res.send({success:true, message: 'notRoot'});
+        controller: (rkInstance) => {
+            return (req, res, next) => {
+                return res.send({success:true, message: 'notRoot'});
 
+            }
         }
     },
 

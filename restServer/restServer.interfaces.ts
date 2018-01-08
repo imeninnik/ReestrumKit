@@ -10,6 +10,7 @@ export interface IRestRule {
 }
 
 export interface IRestServerOptions {
+    rkInstance:any;
     port?: number;
     apiPath?: string;
     apiVersion?: string;

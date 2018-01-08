@@ -20,7 +20,7 @@ export default class ReestrumKit {
     public async init() {
         const s:restI.IRestServerOptions = this.settings.restServer;
 
-        this.restServer = new Server(s.port ,s.apiPath,s.apiVersion,s.basePathToRESTFolder);
+        this.restServer = new Server(this, s.port ,s.apiPath,s.apiVersion,s.basePathToRESTFolder);
         this.restServer.init();
         return DAL.Init(this.settings.dal);
 
