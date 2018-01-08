@@ -101,9 +101,10 @@ export default class Server {
                             restRule.controller(this.rkInstance)
                         );
 
-                        return resolve();
                     });
                 });
+
+                return resolve();
 
 
             });
