@@ -24,15 +24,14 @@ export default class Server {
     }
 
     public async init() {
-
         this.expressApp.set('port', this.port);
         this.server = http.createServer(this.expressApp);
-
 
         this.initMiddleware();
         await this.initRoutes();
         await this.start();
-        return
+
+        return;
 
     }
 
@@ -50,9 +49,6 @@ export default class Server {
                 reject(err)
             });
 
-            // this.server.on("listening", () => {
-            //
-            // });
 
         });
 
@@ -77,6 +73,7 @@ export default class Server {
                     message: `API base path ${this.fullAPIPath}`
                 });
             });
+
 
             glob(`${this.basePathToRESTFolder}/**/*.rest.ts`, {absolute:true}, (err, files) => {
                 if (err || !files.length) {
@@ -105,6 +102,7 @@ export default class Server {
                     });
 
                 });
+
 
                 return resolve();
 
