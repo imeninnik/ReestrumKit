@@ -40,16 +40,20 @@ export default class Server {
     public async start() {
         return new Promise((resolve, reject) => {
 
-            this.server.listen(this.port);
+            this.server.listen(this.port, ()=> {
+                console.log("#RestServerClass > Server started on port " + this.port);
+                return resolve();
+            });
+
             this.server.on("error", (err: Error) => {
                 console.error("#RestServerClass > Error starting server" + err);
                 reject(err)
             });
 
-            this.server.on("listening", () => {
-                console.log("#RestServerClass > Server started on port " + this.port);
-                return resolve();
-            });
+            // this.server.on("listening", () => {
+            //
+            // });
+
         });
 
     }
