@@ -31,9 +31,8 @@ export default class Server {
 
         this.initMiddleware();
         await this.initRoutes();
-        return this.start();
-
-
+        await this.start();
+        return
 
     }
 
@@ -75,7 +74,6 @@ export default class Server {
                 });
             });
 
-
             glob(`${this.basePathToRESTFolder}/**/*.rest.ts`, {absolute:true}, (err, files) => {
                 if (err || !files.length) {
                     console.error(err||'no rest files!');
@@ -92,7 +90,6 @@ export default class Server {
                         const basePath = restRule.basePath ? `/${restRule.basePath}/` : '/';
 
                         const finalPath = this.fullAPIPath + basePath+restRule.path;
-
                         console.log(`REST > ${restRule.method} > ${finalPath} \t (${restRule.description})`);
 
                         this.addRoutes(
@@ -103,9 +100,9 @@ export default class Server {
 
                     });
 
-                    return resolve();
-
                 });
+
+                return resolve();
 
             });
 
