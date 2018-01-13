@@ -1,12 +1,16 @@
 import DAL from './../DAL.class';
+import * as BMHelpers from './../Helpers/BasicModel.helpers'
 
 export default class BasicModel {
 
     protected static tableName:string = null;
-    protected static pKey:string = null;
+    protected static pKey:string | string[] = null;
     protected static pKeyType:string = null;
-    protected static autoGeneratePkey:boolean = false;
+    protected static autoGeneratePKey:boolean = false;
 
+    public id?:string;
+    public created_at?:string;
+    public updated_at?:string;
 
     public static async GetAll():Promise<any> {
         const knex = DAL.session.knex;
@@ -31,20 +35,32 @@ export default class BasicModel {
     public static async Upsert(model) {
         const knex = DAL.session.knex;
 
-        const pKey = model.constructor['pKey'];
         const tableName  = model.constructor.tableName;
+
+        const pKeys = BMHelpers.getPKeys(model.constructor['pKey']);
+        const trackDateAndTime  = model.constructor['trackDateAndTime'];
+
+
+        if (trackDateAndTime) model = this.updateDateAndTime(model);
 
         const insertQuery = knex(tableName).insert(model).toString();
 
-        const updateQuery = knex(tableName)
-            .update(model)
-            .whereRaw(`${tableName}.${pKey} = '${model[pKey]}'`)
-            .toString().replace(/^update\s.*\sset\s/i, '');
+        const updateQuery = pKeys
+                ? knex(tableName)
+                    .update(model)
+                    .whereRaw( BMHelpers.prepareWhereStatmentForUpsert(pKeys, tableName, model)  )
+                    .toString().replace(/^update\s.*\sset\s/i, '')
+                : null;
 
 
-        const finalQuery = `${ insertQuery } ON CONFLICT (${pKey}) DO UPDATE SET ${updateQuery}`;
+        const finalQuery = updateQuery
+            ? `${ insertQuery } ON CONFLICT (${[...pKeys]}) DO UPDATE SET ${updateQuery}`
+            : `${ insertQuery }`;
 
-        return knex.raw(finalQuery);
+        if (process.env.DBG_QUERY) console.log('Upsert > ',finalQuery);
+
+        return knex.raw(finalQuery)
+            .catch(e => console.log('Upsert error > ', e));
     }
 
     public static async Delete(model) {
@@ -92,7 +108,7 @@ export default class BasicModel {
             this[property] = obj[property];
         }
 
-        if ( pKey && !this[pKey] ) this.handlePrimaryKey();
+        if ( pKey && !this[pKey] ) this.handlePrimaryKeyCreation();
     }
 
     public async save() {
@@ -103,12 +119,26 @@ export default class BasicModel {
         return BasicModel.Delete(this)
     }
 
-    private handlePrimaryKey() {
+
+
+
+    private handlePrimaryKeyCreation() {
         const pKey = this.constructor['pKey'];
         const pKeyType = this.constructor['pKeyType'];
-        const autoGeneratePkey = this.constructor['autoGeneratePkey'];
+        const autoGeneratePKey = this.constructor['autoGeneratePKey'];
 
-        if (pKeyType === 'uuid' && autoGeneratePkey) this[pKey] = DAL.Helpers.getUUID()
+        if (Array.isArray(pKey) && pKeyType && autoGeneratePKey  ) {
+            this[pKey[0]] = DAL.Helpers.getUUID();
+            console.error('Primary key logic is broken, cannot auto-generate pkey if there are more that one pkey. But will assume the first one is id');
+        }
 
+        if (!Array.isArray(pKey) && pKeyType === 'uuid' && autoGeneratePKey) this[pKey] = DAL.Helpers.getUUID();
+
+    }
+
+    private static updateDateAndTime(model) {
+        if (!model.created_at) model.created_at = new Date().toISOString();
+        model.updated_at = new Date().toISOString();
+        return model;
     }
 }

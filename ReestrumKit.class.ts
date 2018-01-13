@@ -5,6 +5,8 @@ import { Server } from './restServer';
 
 export default class ReestrumKit {
 
+    public static get Models() { return Models }
+
     private settings: rki.IRKSettings = {dal:{},qal:{},logger:{},restServer:{},restClient:{}};
     public restServer: any;
 

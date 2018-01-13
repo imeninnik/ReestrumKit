@@ -17,6 +17,16 @@ async function run() {
 
     await r.init();
 
-    console.log(2111);
+    process.env.DBG_QUERY = true;
+
+
+    let person1 = new r.Models.Person();
+    person1.tst = 1;
+    // person1.lname = ['name1', 'name2'];
+    person1.lname = 'name1';
+
+
+    person1.save();
+    console.log(56, person1);
 }
 
