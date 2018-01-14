@@ -81,7 +81,6 @@ create table customer (
 
 DROP TABLE IF EXISTS contact_endpoints;
 create table contact_endpoints (
-    id uuid,
     person_uuid uuid,
     type contact_endpoints_types,
     value text,
@@ -90,5 +89,5 @@ create table contact_endpoints (
 
     updated_at timestamp,
     created_at timestamp,
-    PRIMARY KEY (id, type, value)
+    PRIMARY KEY (type, value)
 );

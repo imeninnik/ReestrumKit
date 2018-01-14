@@ -6,7 +6,7 @@ export default class BasicModel {
     protected static tableName:string = null;
     protected static pKey:string | string[] = null;
     protected static pKeyType:string = null;
-    protected static autoGeneratePKey:boolean = false;
+    protected static autoGeneratePKey:boolean | string = false;
 
     public id?:string;
     public created_at?:string;
@@ -128,7 +128,7 @@ export default class BasicModel {
         const autoGeneratePKey = this.constructor['autoGeneratePKey'];
 
         if (Array.isArray(pKey) && pKeyType && autoGeneratePKey  ) {
-            this[pKey[0]] = DAL.Helpers.getUUID();
+            this[autoGeneratePKey] = DAL.Helpers.getUUID();
             console.error('Primary key logic is broken, cannot auto-generate pkey if there are more that one pkey. But will assume the first one is id');
         }
 

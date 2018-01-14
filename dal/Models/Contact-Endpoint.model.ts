@@ -1,17 +1,14 @@
 import BasicModel from './_Basic.model';
 import * as ENUMS from './ENUM.modelTypes';
 
-export default class Person2 extends BasicModel {
+export default class ContactEndpoint extends BasicModel {
     protected static tableName = 'contact_endpoints';
-    protected static pKey = ['id','type','value'];
-    protected static pKeyType = 'uuid';
-    protected static autoGeneratePKey = true;
+    protected static pKey = ['type','value'];
     protected static trackDateAndTime = true;
 
 
-    public id: string;
     public person_uuid: string;
-    public type: ENUMS.contact_endpoints_types;
+    public type: 'phone' | 'email' | 'address';
     public value: string;
     public verified: boolean;
     public verification_id: string;
@@ -22,7 +19,7 @@ export default class Person2 extends BasicModel {
     constructor() {
         super();
 
-
+        this.verified = false;
     }
 
 }
