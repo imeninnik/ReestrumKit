@@ -19,7 +19,7 @@ export default class ContactEndpoint extends BasicModel {
     constructor() {
         super();
 
-        this.verified = false;
+
     }
 
 }

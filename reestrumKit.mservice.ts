@@ -20,13 +20,8 @@ async function run() {
     process.env.DBG_QUERY = true;
 
 
-    let person1 = new r.Models.Person();
-    person1.tst = 1;
-    // person1.lname = ['name1', 'name2'];
-    person1.lname = 'name1';
+    let cp = await r.Models.ContactEndpoint.GetOneByKeys({type:'phone', value: '0991006566'});
+    console.log(cp);
 
-
-    person1.save();
-    console.log(56, person1);
 }
 

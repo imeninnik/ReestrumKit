@@ -32,6 +32,17 @@ export default class BasicModel {
 
     }
 
+    public static async GetOneByKeys(keysValuesObj): Promise<any> {
+        const knex = DAL.session.knex;
+
+        const one = await knex(this.tableName)
+            .where(keysValuesObj)
+            .catch(e => console.log('GetOneByKeys', e));
+
+        return this.ToModel(one, true);
+
+    }
+
     public static async Upsert(model) {
         const knex = DAL.session.knex;
 
@@ -86,7 +97,7 @@ export default class BasicModel {
             let tmpModel = new this();
             let oneModel = Object.assign(tmpModel,rows[0]);
 
-            return new this(oneModel);
+            return oneModel;
         }
 
 
