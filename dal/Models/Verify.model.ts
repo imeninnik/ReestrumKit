@@ -17,9 +17,6 @@ export default class Verify extends BasicModel {
     public valid_until: Date;
     public attempts: number;
     public status: string;
-    public created_at: string;
-
-
 
 
 
@@ -27,7 +24,7 @@ export default class Verify extends BasicModel {
         super();
     }
 
-   
+
 
 }
 

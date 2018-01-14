@@ -38,7 +38,7 @@ describe('DAL Person Model', function() {
 
         expect(personId).to.be.length(36);
         expect(person.created_at).to.be;
-        expect(personId.updated_at).to.be
+        expect(personId.updated_at).to.be;
 
     });
 

@@ -1,5 +1,10 @@
 DROP TYPE IF EXISTS gendre CASCADE;
 CREATE TYPE gender AS ENUM ('male', 'female', 'trans');
+
+DROP TYPE IF EXISTS contact_endpoints_types, CASCADE;
+CREATE TYPE contact_endpoints_types AS ENUM ('phone', 'email','address');
+
+
 DROP TABLE IF EXISTS persons;
 create table persons (
     id uuid,
@@ -50,6 +55,7 @@ create table verifies (
 	status text,
 
     created_at timestamp,
+    updated_at timestamp,
     PRIMARY KEY (id)
 );
 
@@ -70,4 +76,19 @@ create table customer (
     updated_at timestamp,
     created_at timestamp,
     PRIMARY KEY (id)
+);
+
+
+DROP TABLE IF EXISTS contact_endpoints;
+create table contact_endpoints (
+    id uuid,
+    person_uuid uuid,
+    type contact_endpoints_types,
+    value text,
+    verified boolean,
+    verification_id uuid,
+
+    updated_at timestamp,
+    created_at timestamp,
+    PRIMARY KEY (id, type, value)
 );
