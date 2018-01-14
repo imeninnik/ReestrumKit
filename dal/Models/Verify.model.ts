@@ -22,6 +22,9 @@ export default class Verify extends BasicModel {
 
     constructor() {
         super();
+
+        if (typeof this.attempts === 'undefined') this.attempts = 0;
+        if (typeof this.status === 'undefined') this.status = 'new';
     }
 
 
