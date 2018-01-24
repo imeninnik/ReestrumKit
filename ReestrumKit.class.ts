@@ -22,7 +22,7 @@ export default class ReestrumKit {
     constructor(private serviceName:string,  settings = null, BL) {
         if (settings) this.settings = Object.assign(this.settings, settings);
 
-        if (BL) this.BL = BL.init(this);
+        if (BL) this.BL = BL(this);
 
     }
 
