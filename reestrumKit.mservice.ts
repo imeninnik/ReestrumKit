@@ -24,14 +24,17 @@ async function run() {
 
 
 
-    let cep = new r.Models.ContactEndpoint();
-    cep.value = '0';
-    cep.type = 'phone';
-    cep.verified = true;
-    await cep.save();
+    // let cep = new r.Models.ContactEndpoint();
+    // cep.value = '0';
+    // cep.type = 'phone';
+    // cep.verified = true;
+    // await cep.save();
+    //
+    // let cp = await r.Models.ContactEndpoint.GetOneByKeys({type:'phone', value: '0991006566'});
+    // console.log(cp);
 
-    let cp = await r.Models.ContactEndpoint.GetOneByKeys({type:'phone', value: '0991006566'});
-    console.log(cp);
 
+
+    // r.IO.sms.send();
 }
 

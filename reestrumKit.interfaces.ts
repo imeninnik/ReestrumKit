@@ -1,5 +1,7 @@
+import * as DALI from './dal/DAL.interfaces';
+
 export interface IRKSettings {
-    dal:any;
+    dal: DALI.IDALSettings | any;
     qal:any;
     logger:any;
     restServer:any;
