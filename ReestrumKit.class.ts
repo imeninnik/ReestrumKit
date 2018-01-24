@@ -9,20 +9,20 @@ import RestClient from './restClient/RestClient.class';
 
 export default class ReestrumKit {
 
+    public BL: any;
     public static get Models() { return Models }
 
     private settings: rki.IRKSettings = {dal:{},qal:{},logger:{},restServer:{},restClient:{}};
-    private BL: any;
     private _qMessage: any;
     private _IOClass: any;
 
     public restServer: any;
 
 
-    constructor(private serviceName:string,  settings = null, BL) {
+    constructor(private serviceName:string,  settings = null, BL?:Function) {
         if (settings) this.settings = Object.assign(this.settings, settings);
 
-        if (BL) this.BL = BL(this);
+        if (BL && typeof BL == 'function') this.BL = BL(this);
 
     }
 
