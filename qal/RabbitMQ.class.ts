@@ -16,9 +16,13 @@ export default class RabbitMQ {
                     return err;
                 }
                 this.connection = conn;
+
+                process.once('SIGINT', this.connection.close.bind(conn));
+
                 return resolve();
             });
-        })
+
+        });
     }
 
     public tst() {
