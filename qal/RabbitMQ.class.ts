@@ -79,4 +79,8 @@ export default class RabbitMQ {
 
         });
     }
+
+    public close() {
+        return this.connection.close();
+    }
 }
