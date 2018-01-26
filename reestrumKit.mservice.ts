@@ -36,5 +36,10 @@ async function run() {
 
 
     // r.IO.sms.send();
+
+
+    r.qal.tst()
+
+
 }
 

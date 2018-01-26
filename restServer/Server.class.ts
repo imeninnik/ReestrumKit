@@ -24,6 +24,7 @@ export default class Server {
     }
 
     public async init() {
+
         this.expressApp.set('port', this.port);
         this.server = http.createServer(this.expressApp);
 
