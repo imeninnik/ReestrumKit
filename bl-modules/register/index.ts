@@ -4,6 +4,6 @@ export default class Register {
     }
 
     public static RegisterByEmail(email: string) {
-        console.log('will run Registering by Email');
+        console.log('will run Registering by Email 2');
     }
 }
