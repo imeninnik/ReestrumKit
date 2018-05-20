@@ -30,6 +30,7 @@
   },
   "dependencies": {
     "amqplib": "^0.5.2",
+    "argon2": "^0.19.2",
     "body-parser": "^1.18.2",
     "express": "^4.16.2",
     "glob": "^7.1.2",

@@ -31,11 +31,12 @@ export default class DAL {
             client: dalSettings.client || 'pg',
 
             connection: {
-                host : dalSettings.host || 'localhost',
-                user : dalSettings.user || 'postgres',
-                password : dalSettings.password || 'pass',
-                database : dalSettings.database || 'reestrum',
-                application_name: dalSettings.application_name || 'tstApplicationName!!!!!!'
+                host : dalSettings.host || process.env.MAINDB_HOST || 'localhost',
+                user : dalSettings.user || process.env.MAINDB_USER ||'postgres',
+                port: dalSettings.port || process.env.MAINDB_PORT ||'postgres' || 5432,
+                password : dalSettings.password || process.env.MAINDB_PASS ||'password',
+                database : dalSettings.database || process.env.MAINDB_DBNAME ||'reestrum',
+                application_name: dalSettings.application_name || process.env.RKI_APP_NAME || 'tstApplicationName!!!!!!'
             }
 
 
