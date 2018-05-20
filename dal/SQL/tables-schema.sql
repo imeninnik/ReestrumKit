@@ -78,6 +78,35 @@ CREATE TABLE reestrum.customer (
   PRIMARY KEY (id)
 );
 
+DROP TABLE IF EXISTS reestrum.user;
+CREATE TABLE reestrum.user (
+  id                  UUID,
+  person_uuid         UUID,
+  is_business         BOOLEAN,
+  verified            BOOLEAN,
+  crypto_uuid         UUID,
+  password            TEXT,
+  roles               TEXT [],
+
+  last_logon          TIMESTAMP,
+  last_logout         TIMESTAMP,
+
+  updated_at          TIMESTAMP,
+  created_at          TIMESTAMP,
+  PRIMARY KEY (id)
+);
+
+DROP TABLE IF EXISTS reestrum.crypto;
+CREATE TABLE reestrum.crypto (
+  id                  UUID,
+  value               TEXT,
+  type                TEXT,
+
+  updated_at          TIMESTAMP,
+  created_at          TIMESTAMP,
+  PRIMARY KEY (id)
+);
+
 
 DROP TABLE IF EXISTS reestrum.contact_endpoints;
 CREATE TABLE reestrum.contact_endpoints (
