@@ -1,7 +1,7 @@
 import BasicModel from './_Basic.model';
 
 export default class User extends BasicModel {
-    protected static tableName = 'crypto';
+    protected static tableName = 'cryptos';
     protected static pKey = 'id';
     protected static pKeyType = 'uuid';
     protected static autoGeneratePKey = true;
@@ -13,9 +13,11 @@ export default class User extends BasicModel {
     public type: string;
 
 
-    constructor() {
+    constructor(type = 'salt', value) {
         super();
 
+        this.type = value;
+        this.value = value;
 
     }
 
