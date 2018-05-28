@@ -7,3 +7,9 @@ npm install -g node-gyp
 
 npm config set python "C:\Users\pkarl\Anaconda3\envs\two-seven\python.exe"
 npm install argon2
+
+
+## MODELS
+### UserClient - user_clients
+Each user can have a client (web-browser instance, mobile device) that can be authenticated separately. We collect this 
+data to be able predict user even if one accessed the side without logging in

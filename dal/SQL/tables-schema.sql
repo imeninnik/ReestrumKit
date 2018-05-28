@@ -120,3 +120,18 @@ CREATE TABLE contact_endpoints (
   created_at      TIMESTAMP,
   PRIMARY KEY (type, value)
 );
+
+
+DROP TABLE IF EXISTS user_clients;
+CREATE TABLE user_clients (
+  id     UUID,
+  user_id UUID,
+  fingerprint     TEXT,
+  token     TEXT,
+  authenicated    BOOLEAN,
+
+
+  updated_at      TIMESTAMP,
+  created_at      TIMESTAMP,
+  PRIMARY KEY (id, fingerprint, token)
+);
