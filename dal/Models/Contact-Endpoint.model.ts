@@ -9,7 +9,7 @@ export default class ContactEndpoint extends BasicModel {
     protected static trackDateAndTime = true;
 
 
-    public person_uuid: string;
+    public person_id: string;
     public type: ENUMS.contact_endpoints_types;
     public value: string;
     public verified: boolean;

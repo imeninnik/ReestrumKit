@@ -81,7 +81,7 @@ CREATE TABLE customers (
 DROP TABLE IF EXISTS users;
 CREATE TABLE users (
   id                  UUID,
-  person_uuid         UUID,
+  person_id         UUID,
   is_business         BOOLEAN,
   verified            BOOLEAN,
   crypto_id           UUID,
@@ -110,7 +110,7 @@ CREATE TABLE cryptos (
 
 DROP TABLE IF EXISTS contact_endpoints;
 CREATE TABLE contact_endpoints (
-  person_uuid     UUID,
+  person_id     UUID,
   type            CONTACT_ENDPOINTS_TYPES,
   value           TEXT,
   verified        BOOLEAN,

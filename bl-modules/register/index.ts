@@ -4,6 +4,7 @@ import { IBasicUser } from "../../reestrumKit.interfaces";
 
 interface IResponse {
     error?: boolean;
+    person?: any;
     message: string;
     user: IBasicUser
 }
@@ -26,7 +27,6 @@ export default class Register {
             if (contactEndPoint) resp = await Register._HandleRegistrationWithExistingEndPoint(rkInstance, contactEndPoint);
             if (!contactEndPoint ) resp = await Register._HandleRegistrationWithoutExistingEndPoint(rkInstance, email);
 
-
             return resp;
 
         } catch (err) {
@@ -34,6 +34,11 @@ export default class Register {
         }
 
 
+    }
+
+    public static GenerateCallBackURL(email: string, code: string) {
+        // todo move to process.env
+        return `http://localhost:8001/api/register/email/verify/${email}/${code}`
     }
 
     private static async _HandleRegistrationWithExistingEndPoint(rkInstance, contactEndPoint) {
@@ -57,16 +62,16 @@ export default class Register {
         endPoint.value = email;
         await endPoint.save();
 
-        const user = await Register._CreateUserWithPassAndCrypto(rkInstance);
+        const user = await Register._CreateUserWithPassAndCrypto(rkInstance, person);
 
         const message = 'New user has been created';
         console.log(message);
 
-        return {user, message};
+        return {user, person, message};
 
     }
 
-    private static async _CreateUserWithPassAndCrypto(rkInstance) {
+    private static async _CreateUserWithPassAndCrypto(rkInstance, person) {
         const tempPass = getUUID();
         const hash = await argon2.hash(tempPass, { raw: false });
 
@@ -76,6 +81,7 @@ export default class Register {
         const user = new rkInstance.Models.User();
         user.crypto_id = cryptoItem.id;
         user.password = tempPass;
+        user.person_id = person.id;
         await user.save();
 
         return user;

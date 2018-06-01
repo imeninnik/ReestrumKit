@@ -31,4 +31,19 @@ export default class Email {
             console.log(' - - - - - - - - - - - - - - - - - - - - - - - - - - - -')
         })
     }
+
+    public async sendConfirmEmail(email, callbackURL, senderEmailAddress = process.env.FROM) {
+        const data = {
+            senderEmailAddress: '"Some one" <lool@reestrum.com>',
+            email,
+            callbackURL,
+            subject: 'Confirm your email'
+        };
+
+        this.email('confirm-email', data, (error, result) => {
+            console.log(' - - - - - - - - - - - - - - - - - - - - -> email sent: ');
+            console.log(result);
+            console.log(' - - - - - - - - - - - - - - - - - - - - - - - - - - - -')
+        })
+    }
 }
