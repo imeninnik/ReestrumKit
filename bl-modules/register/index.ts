@@ -62,8 +62,8 @@ export default class Register {
 
         const endPoint = new rkInstance.Models.ContactEndpoint();
 
-        endPoint.person_id = user.id;
-        endPoint.user_id = 'email';
+        endPoint.person_id = person.id;
+        endPoint.user_id = user.id;
         endPoint.type = 'email';
         endPoint.value = email;
         await endPoint.save();

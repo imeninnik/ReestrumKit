@@ -63,10 +63,10 @@ export default class User extends BasicModel {
             .select()
             .whereRaw(` id = '${userId}' `);
 
-        const user = ContactEndpoint.ToModel(users, true);
-        await users.verify();
+        const user = User.ToModel(users, true);
+        await user.verify();
 
-        return users;
+        return user;
     }
 
 
