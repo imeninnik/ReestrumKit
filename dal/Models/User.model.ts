@@ -1,4 +1,7 @@
 import BasicModel from './_Basic.model';
+import DAL from "../DAL.class";
+import ContactEndpoint from "./Contact-Endpoint.model";
+import Person from "./Person.model";
 
 const DEFAULT_NEW_USER = {
     roles: ['user'],
@@ -38,6 +41,32 @@ export default class User extends BasicModel {
             : this.roles = ['user'];
 
 
+    }
+
+    public async verify() {
+        this.verified = true;
+        return this.save();
+    }
+
+    static async VerifyByContactEndPoint(type: string, value: string|number): Promise<Person | null > {
+        const knex = DAL.session.knex;
+
+        const contactEndpoins = await knex('contact_endpoints')
+            .select()
+            .whereRaw(` type = '${type}' and value = '${value}' `);
+
+        if (!contactEndpoins.length) return null;
+
+        const userId = contactEndpoins[0].user_id;
+
+        const users =  await knex(this.tableName)
+            .select()
+            .whereRaw(` id = '${userId}' `);
+
+        const user = ContactEndpoint.ToModel(users, true);
+        await users.verify();
+
+        return users;
     }
 
 

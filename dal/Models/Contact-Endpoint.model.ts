@@ -10,6 +10,7 @@ export default class ContactEndpoint extends BasicModel {
 
 
     public person_id: string;
+    public user_id: string;
     public type: ENUMS.contact_endpoints_types;
     public value: string;
     public verified: boolean;

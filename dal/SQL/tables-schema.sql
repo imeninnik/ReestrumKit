@@ -111,6 +111,7 @@ CREATE TABLE cryptos (
 DROP TABLE IF EXISTS contact_endpoints;
 CREATE TABLE contact_endpoints (
   person_id     UUID,
+  user_id     UUID,
   type            CONTACT_ENDPOINTS_TYPES,
   value           TEXT,
   verified        BOOLEAN,

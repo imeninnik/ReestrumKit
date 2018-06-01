@@ -16,7 +16,7 @@ export default class User extends BasicModel {
     constructor(type = 'salt', value) {
         super();
 
-        this.type = value;
+        this.type = type;
         this.value = value;
 
     }

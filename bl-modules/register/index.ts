@@ -41,10 +41,13 @@ export default class Register {
         return `http://localhost:8001/api/register/email/verify/${email}/${code}`
     }
 
-    private static async _HandleRegistrationWithExistingEndPoint(rkInstance, contactEndPoint) {
-        if (contactEndPoint.verified) return {error: true, message: 'This email already in use'};
+    private static async _HandleRegistrationWithExistingEndPoint(rkInstance, email) {
+        if (email.verified) return {error: true, message: 'This email already in use'};
+
+        // get user by endpoint
+        const person = rkInstance.Models.Person.GetOneByContactEndPoint('email', email);
         // create user and crypto
-        const user = await Register._CreateUserWithPassAndCrypto(rkInstance);
+        const user = await Register._CreateUserWithPassAndCrypto(rkInstance, person);
 
         return user;
     }
@@ -55,14 +58,17 @@ export default class Register {
         const person = new rkInstance.Models.Person();
         await person.save();
 
+        const user = await Register._CreateUserWithPassAndCrypto(rkInstance, person);
+
         const endPoint = new rkInstance.Models.ContactEndpoint();
 
-        endPoint.person_uuid = person.id;
+        endPoint.person_id = user.id;
+        endPoint.user_id = 'email';
         endPoint.type = 'email';
         endPoint.value = email;
         await endPoint.save();
 
-        const user = await Register._CreateUserWithPassAndCrypto(rkInstance, person);
+
 
         const message = 'New user has been created';
         console.log(message);
