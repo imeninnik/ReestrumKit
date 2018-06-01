@@ -69,7 +69,26 @@ export default class User extends BasicModel {
         return user;
     }
 
+    static async GetOneByContactEndPoint(type: string, value: string|number): Promise<User | null > {
+        const knex = DAL.session.knex;
 
+        const contactEndpoins = await knex('contact_endpoints')
+            .select()
+            .whereRaw(` type = '${type}' and value = '${value}' `);
+
+        if (!contactEndpoins.length) return null;
+
+        const userId = contactEndpoins[0].user_id;
+
+        const users =  await knex(this.tableName)
+            .select()
+            .whereRaw(` id = '${userId}' `);
+
+        const user = User.ToModel(users, true);
+        await user.verify();
+
+        return user;
+    }
 
 }
 

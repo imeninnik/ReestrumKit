@@ -18,7 +18,7 @@ export default class Email {
 
     public async sendSimple(from, to, subject, body) {
         const person = {
-            senderEmailAddress: '"Some one" <lool@reestrum.com>',
+            senderEmailAddress: '"Reestrum Robot" <noreply@reestrum.com>',
             name : "Pavel",
             email: "p.karlovich+reestrum_test@gmail.com", // person.email can also accept an array of emails
             subject:"Welcome to DWYL :)",
@@ -41,6 +41,23 @@ export default class Email {
         };
 
         this.email('confirm-email', data, (error, result) => {
+            console.log(' - - - - - - - - - - - - - - - - - - - - -> email sent: ');
+            console.log(result);
+            console.log(' - - - - - - - - - - - - - - - - - - - - - - - - - - - -')
+        })
+    }
+
+
+    public async sendConfirmEmailSuccess(email, user, senderEmailAddress = process.env.FROM) {
+        const data = {
+            senderEmailAddress: '"Reestrum Robot" <noreply@reestrum.com>',
+            loginPage: `http://localhost:8001/login`,
+            email,
+            password: user.password,
+            subject: 'Email Confirmations Success!'
+        };
+
+        this.email('confirm-email-success', data, (error, result) => {
             console.log(' - - - - - - - - - - - - - - - - - - - - -> email sent: ');
             console.log(result);
             console.log(' - - - - - - - - - - - - - - - - - - - - - - - - - - - -')
