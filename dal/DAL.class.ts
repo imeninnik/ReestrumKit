@@ -37,12 +37,12 @@ export default class DAL {
             client: dalSettings.client || 'pg',
 
             connection: {
-                host : dalSettings.host || process.env.MAINDB_HOST || 'localhost',
-                user : dalSettings.user || process.env.MAINDB_USER ||'postgres',
-                port: dalSettings.port || parseInt(process.env.MAINDB_PORT) || 5432,
-                password : dalSettings.password || process.env.MAINDB_PASS ||'password',
-                database : dalSettings.database || process.env.MAINDB_DBNAME ||'reestrum',
-                application_name: dalSettings.application_name || process.env.RKI_APP_NAME || 'tstApplicationName!!!!!!'
+                host : dalSettings.host || process.env.RK_MAINDB_HOST || 'localhost',
+                database : dalSettings.database || process.env.RK_MAINDB_DBNAME ||'postgres',
+                user : dalSettings.user || process.env.RK_MAINDB_USER ||'postgres',
+                port: dalSettings.port || parseInt(process.env.RK_MAINDB_PORT) || 5432,
+                password : dalSettings.password || process.env.RK_MAINDB_PASS ||'password',
+                application_name: dalSettings.application_name || process.env.RK_APP_NAME || 'tstApplicationName!!!!!!'
             },
             // pool:{
             //     afterCreate: (conn, done) => {

@@ -14,6 +14,7 @@ export default class Server {
     private expressApp: express.Application;
     private server/*:http.Server*/;
     private _cluster: number;
+    _secured?:string;
 
     constructor(
         private rkInstance: any,
@@ -35,10 +36,10 @@ export default class Server {
         this.expressApp.set('port', this.port);
 
         this._cluster
-            ? this._initCluster()
-            : this._initSingleNode();
+            ? await this._initCluster()
+            : await this._initSingleNode();
 
-        this.server = http.createServer(this.expressApp);
+       // this.server = http.createServer(this.expressApp);
 
         this.initMiddleware();
         await this.initRoutes();
@@ -56,12 +57,16 @@ export default class Server {
     public async start() {
         return new Promise((resolve, reject) => {
 
-            this.server.listen(this.port, ()=> {
-                console.log("#RestServerClass > Server started on port " + this.port);
+            if (this.server) this.server.listen(this.port, () => {
+
+                this._secured
+                    ? console.log("#RestServerClass > Server started on port " + this.port)
+                    : console.log("#RestServerClass > Secured server started on port " + this.port);
+
                 return resolve();
             });
 
-            this.server.on("error", (err: Error) => {
+            if (this.server) this.server.on("error", (err: Error) => {
                 console.error("#RestServerClass > Error starting server" + err);
                 reject(err)
             });
@@ -82,13 +87,13 @@ export default class Server {
             ? clusterAmount = numCPUs-1
             : clusterAmount = this._cluster;
 
-        console.log(`Init Cluster of ${clusterAmount}`);
-
         if (cluster.isMaster) {
+            console.log(`Init ${clusterAmount} nodes cluster`);
             console.log(`Master ${process.pid} is running`);
 
             // Fork workers.
             for (let i = 0; i < clusterAmount; i++) {
+                console.log(`Init node ${i+1} of ${clusterAmount}`);
                 cluster.fork();
             }
 
@@ -96,22 +101,36 @@ export default class Server {
                 console.log(`worker ${worker.process.pid} died`);
             });
         } else {
-            // Workers can share any TCP connection
-            // In this case it is an HTTP server
-            // http.createServer((req, res) => {
-            //     res.writeHead(200);
-            //     res.end('hello world\n');
-            // }).listen(8000);
-
-            this._initSingleNode();
-
             console.log(`Worker ${process.pid} started`);
+            return this._initSingleNode();
+
+
         }
     }
 
     private _initSingleNode() {
-        console.log('Init Single Node Server');
-        this.server = http.createServer(this.expressApp);
+        this._secured = process.env.RK_USE_TSL;
+
+        if (this._secured) {
+            const TSL_KEY_PATH = process.env.RK_TSL_KEY_PATH || 'C:\\SSL\\key.pem';
+            const TSL_CERT_PATH = process.env.RK_TSL_CERT_PATH || 'C:\\SSL\\cert.pem';
+
+            // curl -k https://localhost:8000/
+            const https = require('https');
+            const fs = require('fs');
+
+            const options = {
+                key: fs.readFileSync(),
+                cert: fs.readFileSync('C:\\SSL\\cert.pem')
+            };
+
+            this.server = https.createServer(options, this.expressApp);
+        } else {
+            console.log('Init Single Node Server');
+            this.server = http.createServer(this.expressApp);
+        }
+
+        return;
     }
 
     private initMiddleware(): void {
