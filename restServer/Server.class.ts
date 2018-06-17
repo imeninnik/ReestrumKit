@@ -2,14 +2,18 @@ import * as glob from 'glob';
 import * as http from 'http';
 import * as express from 'express';
 import * as bodyParser from 'body-parser';
+import * as cluster from 'cluster';
+import * as os from 'os';
+
 import { IRestRule, IRestRulesBase } from './restServer.interfaces';
 
+const numCPUs = os.cpus().length;
 
 export default class Server {
     public fullAPIPath: string = '';
     private expressApp: express.Application;
     private server/*:http.Server*/;
-
+    private _cluster: number;
 
     constructor(
         private rkInstance: any,
@@ -19,6 +23,9 @@ export default class Server {
         private basePathToRESTFolder: string = './REST'
     ) {
         this.expressApp = express();
+        this._cluster = parseInt(process.env.RK_CLUSTER) || 0;
+
+
 
         this.composeFullAPIPath();
     }
@@ -26,11 +33,20 @@ export default class Server {
     public async init() {
 
         this.expressApp.set('port', this.port);
+
+        this._cluster
+            ? this._initCluster()
+            : this._initSingleNode();
+
         this.server = http.createServer(this.expressApp);
 
         this.initMiddleware();
         await this.initRoutes();
         await this.start();
+
+        /////////
+
+        ////////
 
         return;
 
@@ -57,6 +73,45 @@ export default class Server {
 
     public stop() {
         this.server.close();
+    }
+
+    private _initCluster() {
+        let clusterAmount;
+
+        (this._cluster >= numCPUs)
+            ? clusterAmount = numCPUs-1
+            : clusterAmount = this._cluster;
+
+        console.log(`Init Cluster of ${clusterAmount}`);
+
+        if (cluster.isMaster) {
+            console.log(`Master ${process.pid} is running`);
+
+            // Fork workers.
+            for (let i = 0; i < clusterAmount; i++) {
+                cluster.fork();
+            }
+
+            cluster.on('exit', (worker, code, signal) => {
+                console.log(`worker ${worker.process.pid} died`);
+            });
+        } else {
+            // Workers can share any TCP connection
+            // In this case it is an HTTP server
+            // http.createServer((req, res) => {
+            //     res.writeHead(200);
+            //     res.end('hello world\n');
+            // }).listen(8000);
+
+            this._initSingleNode();
+
+            console.log(`Worker ${process.pid} started`);
+        }
+    }
+
+    private _initSingleNode() {
+        console.log('Init Single Node Server');
+        this.server = http.createServer(this.expressApp);
     }
 
     private initMiddleware(): void {

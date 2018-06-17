@@ -37,16 +37,14 @@ export default class ReestrumKit {
 
         this.restServer = new Server(this, s.port ,s.apiPath,s.apiVersion,s.basePathToRESTFolder);
         await this.restServer.init();
-        await DAL.Init(this.settings.dal);
+        await DAL.Init(this.settings.dal).catch(e => console.log('TODO Handle this DB Error'));
 
         this._qal = new QueueAccessLayer(this);
-        await this._qal.init();
+        await this._qal.init().catch(e => console.log('TODO Handle this MQ Error'));
 
         this._IOClass = new IO(this);
 
-
         return;
-
     }
 
     public async die() {

@@ -7,3 +7,7 @@ npm install -g node-gyp
 
 npm config set python "C:\Users\pkarl\Anaconda3\envs\two-seven\python.exe"
 npm install argon2
+
+
+## ENV VARIABLES
+RK_CLUSTER 0 to XX integer
