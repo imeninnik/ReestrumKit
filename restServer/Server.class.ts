@@ -39,15 +39,9 @@ export default class Server {
             ? await this._initCluster()
             : await this._initSingleNode();
 
-       // this.server = http.createServer(this.expressApp);
-
         this.initMiddleware();
         await this.initRoutes();
         await this.start();
-
-        /////////
-
-        ////////
 
         return;
 
@@ -60,8 +54,8 @@ export default class Server {
             if (this.server) this.server.listen(this.port, () => {
 
                 this._secured
-                    ? console.log("#RestServerClass > Server started on port " + this.port)
-                    : console.log("#RestServerClass > Secured server started on port " + this.port);
+                    ? console.log("#RestServerClass > Secured server started on port  " + this.port)
+                    : console.log("#RestServerClass > Server started on port " + this.port);
 
                 return resolve();
             });
@@ -120,8 +114,8 @@ export default class Server {
             const fs = require('fs');
 
             const options = {
-                key: fs.readFileSync(),
-                cert: fs.readFileSync('C:\\SSL\\cert.pem')
+                key: fs.readFileSync(TSL_KEY_PATH),
+                cert: fs.readFileSync(TSL_CERT_PATH)
             };
 
             this.server = https.createServer(options, this.expressApp);

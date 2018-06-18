@@ -10,10 +10,14 @@ npm install argon2
 
 
 ## ENV VARIABLES
-RK_CLUSTER 0 to XX integer
-process.env.RK_MAINDB_HOST || 'localhost',
-RK_MAINDB_USER ||'postgres',
-RK_MAINDB_PORT || 5432,
-RK_MAINDB_PASS ||'password',
-RK_MAINDB_DBNAME ||'reestrum',
-RK_APP_NAME || 'tstApplicationName!!!!!!'
+RK_CLUSTER 0 to XX integer  
+RK_MAINDB_HOST || 'localhost'  
+RK_MAINDB_USER ||'postgres'  
+RK_MAINDB_PORT || 5432  
+RK_MAINDB_PASS ||'password'  
+RK_MAINDB_DBNAME ||'reestrum'  
+RK_APP_NAME || 'tstApplicationName!!!!!!'  
+
+RK_USE_TSL  
+RK_TSL_KEY_PATH || 'C:\\SSL\\key.pem'  
+RK_TSL_CERT_PATH || 'C:\\SSL\\cert.pem'  
