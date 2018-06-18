@@ -5,5 +5,6 @@ export interface IDALSettings {
     user: string;
     password: string;
     database: string;
+    schema?: string;
     application_name?: string;
 }

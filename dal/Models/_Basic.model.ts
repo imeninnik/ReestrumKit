@@ -90,7 +90,7 @@ export default class BasicModel {
             .del()
     }
 
-    private static ToModel(rows:any[], one:boolean = false) {
+    public static ToModel(rows:any[], one:boolean = false) {
         if (!rows.length && one) return null;
         if (!rows.length) return [];
 

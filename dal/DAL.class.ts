@@ -33,6 +33,8 @@ export default class DAL {
 
     constructor(dalSettings:DALI.IDALSettings) {
 
+
+
         this.knex = knex({
             client: dalSettings.client || 'pg',
 
@@ -54,7 +56,7 @@ export default class DAL {
             // connection: `postgres://postgres:pass@localhost:5432/reestrum?application_name=testApplicationName`
 
 
-    });
+        });
 
 
     }

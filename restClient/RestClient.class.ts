@@ -11,6 +11,11 @@ export default class RestClient {
         return this.request('POST', parsedUrl)
     }
 
+    public static async get(url, data?, headers?) {
+        const parsedUrl = new URL(url);
+        return this.request('GET', parsedUrl);
+    }
+
 
     private static request(method, urlOptions, data={}, inputHeaders?) {
         return new Promise((resolve, reject) => {

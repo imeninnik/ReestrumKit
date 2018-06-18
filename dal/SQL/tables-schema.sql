@@ -1,12 +1,12 @@
-DROP TYPE IF EXISTS reestrum.GENDER CASCADE;
-CREATE TYPE reestrum.GENDER AS ENUM ('male', 'female', 'unknown');
+DROP TYPE IF EXISTS GENDER CASCADE;
+CREATE TYPE GENDER AS ENUM ('male', 'female', 'unknown');
 
-DROP TYPE IF EXISTS reestrum.CONTACT_ENDPOINTS_TYPES, CASCADE;
-CREATE TYPE reestrum.CONTACT_ENDPOINTS_TYPES AS ENUM ('phone', 'email', 'address');
+DROP TYPE IF EXISTS CONTACT_ENDPOINTS_TYPES, CASCADE;
+CREATE TYPE CONTACT_ENDPOINTS_TYPES AS ENUM ('phone', 'email', 'address');
 
 
-DROP TABLE IF EXISTS reestrum.persons;
-CREATE TABLE reestrum.persons (
+DROP TABLE IF EXISTS persons;
+CREATE TABLE persons (
   id            UUID,
   lname         TEXT,
   fname         TEXT,
@@ -17,7 +17,7 @@ CREATE TABLE reestrum.persons (
   nicknames     TEXT [],
   main_phone    TEXT,
   phones        TEXT [],
-  gender        reestrum.GENDER,
+  gender        GENDER,
   dob           DATE,
   dod           DATE,
 
@@ -29,8 +29,8 @@ CREATE TABLE reestrum.persons (
   PRIMARY KEY (id)
 );
 
-DROP TABLE IF EXISTS reestrum.added;
-CREATE TABLE reestrum.added (
+DROP TABLE IF EXISTS added;
+CREATE TABLE added (
   id                 UUID,
   agent_id           UUID,
   person_id          UUID,
@@ -42,8 +42,8 @@ CREATE TABLE reestrum.added (
 );
 
 
-DROP TABLE IF EXISTS reestrum.verifies;
-CREATE TABLE reestrum.verifies (
+DROP TABLE IF EXISTS verifies;
+CREATE TABLE verifies (
   id          UUID,
   agent_id    UUID,
   campaign_id UUID,
@@ -60,14 +60,14 @@ CREATE TABLE reestrum.verifies (
 );
 
 
-DROP TABLE IF EXISTS reestrum.customer;
-CREATE TABLE reestrum.customer (
+DROP TABLE IF EXISTS customers;
+CREATE TABLE customers (
   id                  UUID,
   lname               TEXT,
   fname               TEXT,
   email               TEXT,
   phone               TEXT,
-  gender              reestrum.GENDER,
+  gender              GENDER,
   dob                 DATE,
   campaign_id         UUID,
   customer_details_id UUID,
@@ -78,13 +78,13 @@ CREATE TABLE reestrum.customer (
   PRIMARY KEY (id)
 );
 
-DROP TABLE IF EXISTS reestrum.user;
-CREATE TABLE reestrum.user (
+DROP TABLE IF EXISTS users;
+CREATE TABLE users (
   id                  UUID,
-  person_uuid         UUID,
+  person_id         UUID,
   is_business         BOOLEAN,
   verified            BOOLEAN,
-  crypto_uuid         UUID,
+  crypto_id           UUID,
   password            TEXT,
   roles               TEXT [],
 
@@ -96,8 +96,8 @@ CREATE TABLE reestrum.user (
   PRIMARY KEY (id)
 );
 
-DROP TABLE IF EXISTS reestrum.crypto;
-CREATE TABLE reestrum.crypto (
+DROP TABLE IF EXISTS cryptos;
+CREATE TABLE cryptos (
   id                  UUID,
   value               TEXT,
   type                TEXT,
@@ -108,10 +108,11 @@ CREATE TABLE reestrum.crypto (
 );
 
 
-DROP TABLE IF EXISTS reestrum.contact_endpoints;
-CREATE TABLE reestrum.contact_endpoints (
-  person_uuid     UUID,
-  type            reestrum.CONTACT_ENDPOINTS_TYPES,
+DROP TABLE IF EXISTS contact_endpoints;
+CREATE TABLE contact_endpoints (
+  person_id     UUID,
+  user_id     UUID,
+  type            CONTACT_ENDPOINTS_TYPES,
   value           TEXT,
   verified        BOOLEAN,
   verification_id UUID,
@@ -119,4 +120,19 @@ CREATE TABLE reestrum.contact_endpoints (
   updated_at      TIMESTAMP,
   created_at      TIMESTAMP,
   PRIMARY KEY (type, value)
+);
+
+
+DROP TABLE IF EXISTS user_clients;
+CREATE TABLE user_clients (
+  id     UUID,
+  user_id UUID,
+  fingerprint     TEXT,
+  token     TEXT,
+  authenicated    BOOLEAN,
+
+
+  updated_at      TIMESTAMP,
+  created_at      TIMESTAMP,
+  PRIMARY KEY (id, fingerprint, token)
 );
