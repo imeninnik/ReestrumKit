@@ -6,13 +6,27 @@ import QueueAccessLayer from "./qal/QueueAccessLayer.class";
 import IO from './IO/IO.class';
 import RestClient from './restClient/RestClient.class';
 import * as Helpers from './helpers';
+import { IRKSettings, IRKSettings_DAL } from "./reestrumKit.interfaces";
+import * as DALI from "./dal/DAL.interfaces";
 
+
+const pgDALSettings: IRKSettings_DAL = {
+    dbEngine: 'pg',
+    pathToModels: 'string',
+    settings:  {
+        client: 'string',
+        host: 'string',
+        user: 'string',
+        password: 'string',
+        database: 'string',
+    }
+};
 
 export default class ReestrumKit {
     public BL: any;
     public static get Models() { return Models }
 
-    private settings: rki.IRKSettings = {dal:{},qal:{},logger:{},restServer:{},restClient:{}};
+    private settings: rki.IRKSettings = {dal:[pgDALSettings], qal:{}, logger:{}, restServer:{}, restClient:{}};
     private _qal: any;
     private _IOClass: any;
 
