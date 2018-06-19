@@ -140,8 +140,8 @@ export default class BasicModel {
         const autoGeneratePKey = this.constructor['autoGeneratePKey'];
 
         if (Array.isArray(pKey) && pKeyType && autoGeneratePKey  ) {
-            this[autoGeneratePKey] = DAL.Helpers.getUUID();
-            console.error('Primary key logic is broken, cannot auto-generate pkey if there are more that one pkey. But will assume the first one is id');
+            this[pKey[0]]= DAL.Helpers.getUUID();
+            //console.error('Primary key logic is broken, cannot auto-generate pkey if there are more that one pkey. But will assume the first one is id');
         }
 
         if (!Array.isArray(pKey) && pKeyType === 'uuid' && autoGeneratePKey) this[pKey] = DAL.Helpers.getUUID();
