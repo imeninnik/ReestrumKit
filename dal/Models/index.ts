@@ -1,3 +1,4 @@
+import BasicModel from './_Basic.model';
 import Person from './Person.model';
 import Person2 from './Person2.model';
 import Verify from './Verify.model';
@@ -9,13 +10,14 @@ import UserClient from './UserClient.model';
 import * as ENUMS from './ENUM.modelTypes';
 
 export const Models = {
+    BasicModel,
     ENUMS,
 
     Person,
     Person2,
     Verify,
     ContactEndpoint,
-    User,
+    // User,
     Crypto,
     UserClient
 };

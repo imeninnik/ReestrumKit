@@ -138,7 +138,7 @@ export default class Server {
 
     private async initRoutes() {
         return new Promise((resolve, reject) => {
-            let requireFiles = [];
+            const requireFiles = [];
 
             this.expressApp.get('/', (req, res, next) => {
                 res.json({

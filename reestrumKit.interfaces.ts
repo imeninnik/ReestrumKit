@@ -12,7 +12,7 @@ interface IDefaultDBRecord {
 }
 
 export interface IRKSettings {
-    dal: IRKSettings_DAL[];
+    dal?: any;
     qal:any;
     logger:any;
     restServer:any;
@@ -20,7 +20,7 @@ export interface IRKSettings {
 }
 
 export interface IRKSettings_DAL {
-    dbEngine: dbEngines;
+    dbEngine: dbEngines | any;
     pathToModels: string;
     settings: any | DALI.IDALSettings
 }
