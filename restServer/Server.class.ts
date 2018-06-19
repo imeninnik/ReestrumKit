@@ -2,6 +2,7 @@ import * as glob from 'glob';
 import * as http from 'http';
 import * as express from 'express';
 import * as bodyParser from 'body-parser';
+import * as cors from 'cors';
 import * as cluster from 'cluster';
 import * as os from 'os';
 
@@ -32,12 +33,14 @@ export default class Server {
     }
 
     public async init() {
+        this.expressApp.disable('x-powered-by');
 
         this.expressApp.set('port', this.port);
 
         this._cluster
             ? await this._initCluster()
             : await this._initSingleNode();
+
 
         this.initMiddleware();
         await this.initRoutes();
@@ -128,6 +131,7 @@ export default class Server {
     }
 
     private initMiddleware(): void {
+        this.expressApp.use(cors());
         this.expressApp.use(bodyParser.json());
         this.expressApp.use(bodyParser.urlencoded({ extended: false }));
     }

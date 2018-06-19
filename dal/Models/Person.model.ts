@@ -1,6 +1,6 @@
 import BasicModel from './_Basic.model';
 import DAL from "../DAL.class";
-import ContactEndpoint from "./Contact-Endpoint.model";
+import ContactEndpoint from "./ContactEndpoint.model";
 
 export default class Person extends BasicModel {
     protected static tableName = 'persons';

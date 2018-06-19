@@ -34,7 +34,7 @@ export default class Email {
 
     public async sendConfirmEmail(email, callbackURL, senderEmailAddress = process.env.FROM) {
         const data = {
-            senderEmailAddress: '"Some one" <lool@reestrum.com>',
+            senderEmailAddress: '"Reestrum Robot" <noreply@reestrum.com>',
             email,
             callbackURL,
             subject: 'Confirm your email'

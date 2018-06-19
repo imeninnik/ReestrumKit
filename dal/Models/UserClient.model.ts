@@ -1,3 +1,4 @@
+import * as Helpers from './../Helpers'
 import BasicModel from './_Basic.model';
 
 const DEFAULT_NEW_USER = {
@@ -5,9 +6,9 @@ const DEFAULT_NEW_USER = {
     verified: false
 };
 
-export default class User extends BasicModel {
+export default class UserClient extends BasicModel {
     protected static tableName = 'user_clients';
-    protected static pKey = ['id','fingerprint', 'token'];
+    protected static pKey = ['user_id','fingerprint'];
     protected static pKeyType = 'uuid';
     protected static autoGeneratePKey = true;
     protected static trackDateAndTime = true;
@@ -23,6 +24,7 @@ export default class User extends BasicModel {
     constructor() {
         super();
 
+        this.id = Helpers.getUUID();
     }
 
 

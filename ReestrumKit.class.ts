@@ -5,6 +5,7 @@ import { Server } from './restServer';
 import QueueAccessLayer from "./qal/QueueAccessLayer.class";
 import IO from './IO/IO.class';
 import RestClient from './restClient/RestClient.class';
+import * as Helpers from './helpers';
 
 
 export default class ReestrumKit {
@@ -31,6 +32,7 @@ export default class ReestrumKit {
     public get qal() { return this._qal }
     public get IO() { return this._IOClass }
     public get restClient() { return RestClient }
+    public get Helpers() { return Helpers }
 
     public async init() {
         const s:restI.IRestServerOptions = this.settings.restServer;

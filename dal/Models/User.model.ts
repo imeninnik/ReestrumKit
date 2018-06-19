@@ -1,6 +1,6 @@
 import BasicModel from './_Basic.model';
 import DAL from "../DAL.class";
-import ContactEndpoint from "./Contact-Endpoint.model";
+import ContactEndpoint from "./ContactEndpoint.model";
 import Person from "./Person.model";
 
 const DEFAULT_NEW_USER = {
@@ -48,6 +48,17 @@ export default class User extends BasicModel {
         return this.save();
     }
 
+    public async getCrypto() {
+        const knex = DAL.session.knex;
+        const crytpos = await knex('cryptos')
+            .select()
+            .whereRaw(` id = '${this.crypto_id}'  `);
+
+        if (!crytpos.length) return null;
+
+        return crytpos[0];
+    }
+
     static async VerifyByContactEndPoint(type: string, value: string|number): Promise<Person | null > {
         const knex = DAL.session.knex;
 
@@ -89,6 +100,8 @@ export default class User extends BasicModel {
 
         return user;
     }
+
+
 
 }
 
