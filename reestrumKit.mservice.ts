@@ -1,4 +1,6 @@
 import ReestrumKit from './ReestrumKit.class';
+import * as util from 'util';
+
 
 
 run();
@@ -19,9 +21,10 @@ async function run() {
 
     process.env.DBG_QUERY = true;
 
+    // const debuglog = util.debuglog('#rk-test');
+    // debuglog('hello from foo [%d]', 123);
 
     ///
-
 
 
     // let cep = new r.Models.ContactEndpoint();
@@ -38,7 +41,7 @@ async function run() {
     // r.IO.sms.send();
 
 
-    r.qal.tst()
+   // r.qal.tst()
 
 
 }

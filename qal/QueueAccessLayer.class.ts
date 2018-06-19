@@ -9,7 +9,10 @@ export default class QueueAccessLayer {
     public async init() {
 
         this.broker = new RabbitMQ();
-        return this.broker.init();
+        return this.broker.init().catch(e => {
+            console.error('Error Connecting to RabbitMQ', e);
+            throw e;
+        });
     }
 
     public tst() {
