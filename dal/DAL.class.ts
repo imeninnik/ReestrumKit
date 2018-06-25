@@ -26,7 +26,7 @@ export default class DAL {
 
         glob(`${dalSettings['pathToModels']}/**/*.model.ts`, {absolute:true}, (err, files) => {
             if (err || !files.length) {
-                console.error(err || 'no rest files!');
+                console.error(err || 'no model files!');
                 return;
             }
 
