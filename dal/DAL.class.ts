@@ -1,6 +1,8 @@
 import * as knex  from 'knex';
+import * as glob from 'glob';
 import * as Helpers from './Helpers';
-import * as DALI from './DAL.interfaces';
+import { IDALSettings } from './DAL.interfaces';
+import { IRKSettings, IRKSettings_DAL } from "./../reestrumKit.interfaces";
 
 
 export default class DAL {
@@ -18,22 +20,45 @@ export default class DAL {
         return Helpers;
     }
 
-    public static async Init(dalSettings:DALI.IDALSettings) {
+    public static async Init(dalSettings:IDALSettings) {
+        let models = {};
+        const requireFiles = [];
+
+        glob(`${dalSettings['pathToModels']}/**/*.model.ts`, {absolute:true}, (err, files) => {
+            if (err || !files.length) {
+                console.error(err || 'no rest files!');
+                return;
+            }
+
+            files.forEach((f, i) => requireFiles[i] = require(f).default);
+
+            requireFiles.forEach(rk => {
+                let obj = {};
+                obj[rk.name] = rk;
+                models = Object.assign(models, obj)
+
+            });
+            console.log(44, models);
+
+        });
+            /////////////////
+
+
+
         this.session = new DAL(dalSettings);
         return this.session.knex.raw('SELECT 1')
+            .then(() => models)
             .catch((e) => {
                 console.error('Error connecting to DB', e);
                 throw e;
-        });
+            });
 
 
     }
 
 
 
-    constructor(dalSettings:DALI.IDALSettings) {
-
-
+    constructor(dalSettings: IDALSettings) {
 
         this.knex = knex({
             client: dalSettings.client || 'pg',
