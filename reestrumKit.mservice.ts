@@ -19,7 +19,7 @@ async function run() {
 
     await r.init();
 
-    process.env.DBG_QUERY = true;
+    process.env.DBG_QUERY = 'true';
 
     // const debuglog = util.debuglog('#rk-test');
     // debuglog('hello from foo [%d]', 123);

@@ -8,10 +8,11 @@ export default class RestClient {
 
     public static async post(url, data?, headers?) {
         const parsedUrl = new URL(url);
-        return this.request('POST', parsedUrl)
+        return this.request('POST', parsedUrl, data)
+
     }
 
-    public static async get(url, data?, headers?) {
+    public static async get(url, headers?) {
         const parsedUrl = new URL(url);
         return this.request('GET', parsedUrl);
     }
@@ -22,12 +23,18 @@ export default class RestClient {
             const messageData = querystring.stringify(data);
 
             const defaultHeaders = {
-                'Content-Type': 'application/x-www-form-urlencoded',
+                'Content-Type': 'application/json',
                 'Content-Length': Buffer.byteLength(messageData)
             };
 
             const headers =  inputHeaders ? inputHeaders : defaultHeaders;
-            const options = Object.assign(urlOptions, {headers}, {method});
+            const options = {
+                headers,
+                method,
+                protocol: urlOptions.protocol,
+                port: parseInt(urlOptions.port),
+                path: urlOptions.pathname,
+            };
 
             const protocol = options['protocol'].slice(0,-1);
 

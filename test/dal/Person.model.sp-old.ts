@@ -14,7 +14,7 @@ import ReestrumKit from './../../ReestrumKit.class';
 let r;
 
 beforeEach(async () => {
-    process.env.TEST_CASE = true;
+    process.env.TEST_CASE = 'true';
     const serviceName = 'dal';
 
     r = new ReestrumKit(serviceName);
@@ -27,7 +27,7 @@ describe('DAL Person Model', function() {
 
     it('Create instance of Person', async() => {
 
-        process.env.DBG_QUERY = true;
+        process.env.DBG_QUERY = 'true';
 
         let person = new r.Models.Person();
 

@@ -1,19 +1,20 @@
-import * as glob from 'glob';
-
 const basePath = 'test';
 
 export const restRules = [
     {
-        description:'all repository actions endpoint',
+        description:'test GET call and answer',
         method: 'get',
         basePath,
         path: ``,
-        controller: function(rkInstance)  {
-             return (req, res, next)  => {
-                return res.send({success:true, message: 'root'});
+        controller: testGET
 
-            }
-        }
+    },
+    {
+        description:'test POST call and answer',
+        method: 'post',
+        basePath,
+        path: ``,
+        controller: testPOST
 
     },
     {
@@ -30,3 +31,20 @@ export const restRules = [
     },
 
 ];
+
+function testGET(rkInstance)  {
+    return (req, res, next)  => {
+        return res.send({success:true, message: 'get', tst: req.params.id});
+
+    }
+}
+
+function testPOST(rkInstance)  {
+    return (req, res, next)  => {
+        return res.send({success:true, message: 'post'});
+
+    }
+}
+
+
+
