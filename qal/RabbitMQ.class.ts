@@ -8,7 +8,7 @@ export default class RabbitMQ {
 
     public async init() {
         return new Promise((resolve, reject) => {
-            amqp.connect('amqp://localhost', (err, conn) => {
+                amqp.connect('amqp://localhost', (err, conn) => {
                 if (err) {
                     console.log(err);
                     reject(err);
