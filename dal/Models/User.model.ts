@@ -1,7 +1,5 @@
 import BasicModel from './_Basic.model';
 import DAL from "../DAL.class";
-import ContactEndpoint from "./ContactEndpoint.model";
-import Person from "./Person.model";
 
 const DEFAULT_NEW_USER = {
     roles: ['user'],
@@ -59,7 +57,7 @@ export default class User extends BasicModel {
         return crytpos[0];
     }
 
-    static async VerifyByContactEndPoint(type: string, value: string|number): Promise<Person | null > {
+    static async VerifyByContactEndPoint(type: string, value: string|number): Promise<any/*Person | null*/ > {
         const knex = DAL.session.knex;
 
         const contactEndpoins = await knex('contact_endpoints')

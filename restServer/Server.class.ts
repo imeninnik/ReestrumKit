@@ -18,14 +18,14 @@ export default class Server {
     _secured?:string;
 
     constructor(
-        private rkInstance: any,
-        private port: number = 8082,
+        private gtInstance: any,
+        private port: number = 8080,
         private apiPath: string = 'api',
         private apiVersion: string = 'v1',
         private basePathToRESTFolder: string = './REST'
     ) {
         this.expressApp = express();
-        this._cluster = parseInt(process.env.RK_CLUSTER) || 0;
+        this._cluster = parseInt(process.env.GT_CLUSTER) || 0;
 
 
 
@@ -57,8 +57,8 @@ export default class Server {
             if (this.server) this.server.listen(this.port, () => {
 
                 this._secured
-                    ? console.log("#RestServerClass > Secured server started on port  " + this.port)
-                    : console.log("#RestServerClass > Server started on port " + this.port);
+                    ? this.gtInstance.logger.info("#RestServerClass > Secured server started on port  " + this.port)
+                    : this.gtInstance.logger.info("#RestServerClass > Server started on port " + this.port);
 
                 return resolve();
             });
@@ -74,7 +74,7 @@ export default class Server {
     }
 
     public stop() {
-        this.server.close();
+        return this.server.close();
     }
 
     private _initCluster() {
@@ -85,20 +85,20 @@ export default class Server {
             : clusterAmount = this._cluster;
 
         if (cluster.isMaster) {
-            console.log(`Init ${clusterAmount} nodes cluster`);
-            console.log(`Master ${process.pid} is running`);
+            this.gtInstance.logger.info(`Init ${clusterAmount} nodes cluster`);
+            this.gtInstance.logger.info(`Master ${process.pid} is running`);
 
             // Fork workers.
             for (let i = 0; i < clusterAmount; i++) {
-                console.log(`Init node ${i+1} of ${clusterAmount}`);
+                this.gtInstance.logger.log(`Init node ${i+1} of ${clusterAmount}`);
                 cluster.fork();
             }
 
             cluster.on('exit', (worker, code, signal) => {
-                console.log(`worker ${worker.process.pid} died`);
+                this.gtInstance.logger.info(`worker ${worker.process.pid} died`);
             });
         } else {
-            console.log(`Worker ${process.pid} started`);
+            this.gtInstance.logger.log(`Worker ${process.pid} started`);
             return this._initSingleNode();
 
 
@@ -106,7 +106,7 @@ export default class Server {
     }
 
     private _initSingleNode() {
-        this._secured = process.env.RK_USE_TSL;
+        this._secured = process.env.GT_USE_TLS;
 
         if (this._secured) {
             const TSL_KEY_PATH = process.env.RK_TSL_KEY_PATH || 'C:\\SSL\\key.pem';
@@ -123,7 +123,7 @@ export default class Server {
 
             this.server = https.createServer(options, this.expressApp);
         } else {
-            console.log('Init Single Node Server');
+            this.gtInstance.logger.info('Init Single Node Server');
             this.server = http.createServer(this.expressApp);
         }
 
@@ -133,6 +133,7 @@ export default class Server {
     private initMiddleware(): void {
         this.expressApp.use(cors());
         this.expressApp.use(bodyParser.json());
+        this.expressApp.use(bodyParser.text());
         this.expressApp.use(bodyParser.urlencoded({ extended: false }));
     }
 
@@ -150,7 +151,8 @@ export default class Server {
 
             glob(`${this.basePathToRESTFolder}/**/*.rest.ts`, {absolute:true}, (err, files) => {
                 if (err || !files.length) {
-                    console.error(err||'no rest files!');
+                    this.gtInstance.logger.error(err||'no rest files!');
+                    this.gtInstance.logger.log(`\t basePathToRESTFolder: ${this.basePathToRESTFolder}`);
                     return;
                 }
 
@@ -158,18 +160,18 @@ export default class Server {
                     requireFiles[i] = require(f)
                 });
 
-                console.log(`\n\n==== Apply REST Rules`);
+                this.gtInstance.logger.trace(`\n\n==== Apply REST Rules`);
                 requireFiles.forEach((rq:IRestRulesBase) => {
                     rq.restRules.forEach((restRule:IRestRule) => {
                         const basePath = restRule.basePath ? `/${restRule.basePath}/` : '/';
 
                         const finalPath = this.fullAPIPath + basePath+restRule.path;
-                        console.log(`REST > ${restRule.method} > ${finalPath} \t (${restRule.description})`);
+                        this.gtInstance.logger.trace(`REST > ${restRule.method} > ${finalPath} \t (${restRule.description})`);
 
                         this.addRoutes(
                             restRule.method,
                             finalPath,
-                            restRule.controller(this.rkInstance)
+                            restRule.controller(this.gtInstance)
                         );
 
                     });

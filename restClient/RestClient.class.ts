@@ -1,42 +1,64 @@
 const http = require('http');
 const https = require('https');
-const { URL } = require('url');
+const Url = require('url');
 const querystring = require('querystring');
 
 export default class RestClient {
-    protected static protocols = { http,https };
+    protected static protocols = { http, https };
 
     public static async post(url, data?, headers?) {
-        const parsedUrl = new URL(url);
-        return this.request('POST', parsedUrl, data)
+        if (!url || !url.length) throw 'URL is not provided';
+        // const parsedUrl = new URL(url);
+        const parsedUrl = Url.parse(url, true);
+
+        return this.request('POST', parsedUrl, data, headers)
+
+    }
+
+    public static async postString(url, string) {
+        if (!url || !url.length) throw 'URL is not provided';
+        // const parsedUrl = new URL(url);
+        const parsedUrl = Url.parse(url, true);
+
+        const headers = {'Content-Type': 'text/plain','Content-Length': Buffer.byteLength(string) };
+        return this.request('POST', parsedUrl, string, headers)
 
     }
 
     public static async get(url, headers?) {
-        const parsedUrl = new URL(url);
-        return this.request('GET', parsedUrl);
+        if (!url || !url.length) throw 'URL is not provided';
+
+        // const parsedUrl = new URL(url);
+        const parsedUrl = Url.parse(url, true);
+        return this.request('GET', parsedUrl, null, headers);
     }
 
-
-    private static request(method, urlOptions, data={}, inputHeaders?) {
+    private static request(method, urlOptions, data = null, inputHeaders?) {
         return new Promise((resolve, reject) => {
-            const messageData = querystring.stringify(data);
+
+            let messageData = (data && typeof data !== 'string') ? JSON.stringify(data) : data;
+
 
             const defaultHeaders = {
                 'Content-Type': 'application/json',
-                'Content-Length': Buffer.byteLength(messageData)
+                'Content-Length': data ? Buffer.byteLength(messageData) : 0
             };
 
-            const headers =  inputHeaders ? inputHeaders : defaultHeaders;
+            // const headers =  inputHeaders ? inputHeaders : defaultHeaders;
+            const headers =  Object.assign(defaultHeaders, inputHeaders);
             const options = {
                 headers,
                 method,
                 protocol: urlOptions.protocol,
-                port: parseInt(urlOptions.port),
-                path: urlOptions.pathname,
+                port: parseInt(urlOptions.port) || (urlOptions.protocol === 'https:' ? 443 : 80),
+                path: urlOptions.path,
+                hostname: urlOptions.hostname,
             };
 
             const protocol = options['protocol'].slice(0,-1);
+
+            // handle form data
+            if (options.headers['Content-Type'] === 'application/x-www-form-urlencoded') handleFormData();
 
             const req = this.protocols[protocol].request(options, (res) => {
                 // console.log(`STATUS: ${res.statusCode}`);
@@ -44,7 +66,7 @@ export default class RestClient {
                 res.setEncoding('utf8');
                 res.on('data', (chunk) => {
                     // console.log(`BODY: ${chunk}`);
-                    resolve(chunk);
+                    return resolve(chunk);
                 });
                 res.on('end', () => {
                     console.log('No more data in response.');
@@ -58,8 +80,15 @@ export default class RestClient {
             });
 
             // write data to request body
-            req.write(messageData);
+            if (data) req.write(messageData,'utf8');
             req.end();
+
+
+            function handleFormData() {
+                messageData = querystring.stringify(data);
+                options.headers['Content-Length'] =  messageData.length;
+            }
+
         });
 
     }

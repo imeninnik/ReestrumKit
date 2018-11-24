@@ -1,8 +1,8 @@
 process.env.TEMPLATE_DIRECTORY=`${__dirname}/templates`;
 process.env.SENDER_EMAIL_ADDRESS='your.aws.verified.email.address@gmail.com';
 process.env.AWS_REGION='eu-west-1';
-process.env.AWS_ACCESS_KEY_ID='AKIAJNCBE7E4JNJP4ACA';
-process.env.AWS_SECRET_ACCESS_KEY='u53xNMov5QMYiD311fv6/bL2fr/4pTEXoJA9ZWfY';
+process.env.AWS_ACCESS_KEY_ID='xxxxx';
+process.env.AWS_SECRET_ACCESS_KEY='xxxxx/yyy';
 
 const sendemail  = require('sendemail'); // no api key
 
@@ -32,7 +32,7 @@ export default class Email {
         })
     }
 
-    public async sendConfirmEmail(email, callbackURL, senderEmailAddress = process.env.FROM) {
+    public async sendConfirmEmail(email, callbackURL, senderEmailAddress = process.env.RK_DEFAULT_FROM_EMAIL) {
         const data = {
             senderEmailAddress: '"Reestrum Robot" <noreply@reestrum.com>',
             email,
@@ -48,7 +48,7 @@ export default class Email {
     }
 
 
-    public async sendConfirmEmailSuccess(email, user, senderEmailAddress = process.env.FROM) {
+    public async sendConfirmEmailSuccess(email, user, senderEmailAddress = process.env.RK_DEFAULT_FROM_EMAIL) {
         const data = {
             senderEmailAddress: '"Reestrum Robot" <noreply@reestrum.com>',
             loginPage: `http://localhost:8001/login`,

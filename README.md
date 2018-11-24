@@ -20,9 +20,22 @@ RK_MAINDB_HOST || 'localhost'
 RK_MAINDB_USER ||'postgres'  
 RK_MAINDB_PORT || 5432  
 RK_MAINDB_PASS ||'password'  
-RK_MAINDB_DBNAME ||'reestrum'  
+RK_MAINDB_DBNAME // dbname  
 RK_APP_NAME || 'tstApplicationName!!!!!!'  
 
+### TLS/SSL
 RK_USE_TSL  
 RK_TSL_KEY_PATH || 'C:\\SSL\\key.pem'  
 RK_TSL_CERT_PATH || 'C:\\SSL\\cert.pem'  
+
+### DAL
+DBG_QUERY || null // "true" to show queries
+
+### Email with AWS
+TEMPLATE_DIRECTORY || `${__dirname}/templates`;
+SENDER_EMAIL_ADDRESS || 'your.aws.verified.email.address@gmail.com';
+AWS_REGION || 'eu-west-1';
+AWS_ACCESS_KEY_ID || 'xxxxx';
+AWS_SECRET_ACCESS_KEY || 'xxxxx/yyy';
+RK_DEFAULT_FROM_EMAIL
+
