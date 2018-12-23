@@ -1,4 +1,5 @@
 export interface IDALSettings {
+    pathToModels: string;
     client: string;
     host: string;
     port?: number;

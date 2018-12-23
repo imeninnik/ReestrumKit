@@ -1,4 +1,4 @@
-import BasicModel from './_Basic.model';
+import BasicModel from './_Basic.pg.model';
 import DAL from "../DAL.class";
 
 const DEFAULT_NEW_USER = {

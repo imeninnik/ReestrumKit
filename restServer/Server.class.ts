@@ -6,6 +6,7 @@ import * as cors from 'cors';
 import * as cluster from 'cluster';
 import * as os from 'os';
 
+
 import { IRestRule, IRestRulesBase } from './restServer.interfaces';
 
 const numCPUs = os.cpus().length;
@@ -19,10 +20,11 @@ export default class Server {
 
     constructor(
         private gtInstance: any,
-        private port: number = 8080,
+        private port: number = 8090,
         private apiPath: string = 'api',
         private apiVersion: string = 'v1',
-        private basePathToRESTFolder: string = './REST'
+        private basePathToRESTFolder: string = './REST',
+        private useCoreRESTFolder: boolean = true
     ) {
         this.expressApp = express();
         this._cluster = parseInt(process.env.GT_CLUSTER) || 0;

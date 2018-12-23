@@ -24,13 +24,22 @@ export default class DAL {
         let models = {};
         const requireFiles = [];
 
-        glob(`${dalSettings['pathToModels']}/**/*.model.ts`, {absolute:true}, (err, files) => {
+        if (!dalSettings.pathToModels) dalSettings.pathToModels =  __dirname+'/Models';
+        if (!dalSettings.client) dalSettings.client =  'pg';
+        if (!dalSettings.host) dalSettings.host = 'localhost';
+        if (!dalSettings.user) dalSettings.user = 'postgres';
+        if (!dalSettings.password) dalSettings.password = 'password';
+
+
+        glob(`${dalSettings['pathToModels']}/**/*.pg.model.ts`, {absolute:true}, (err, files) => {
             if (err || !files.length) {
                 console.error(err || 'no model files!');
                 return;
             }
 
-            files.forEach((f, i) => requireFiles[i] = require(f).default);
+            files.forEach((f, i) =>
+                requireFiles[i] = require(f).default
+            );
 
             requireFiles.forEach(rk => {
                 let obj = {};
@@ -38,14 +47,17 @@ export default class DAL {
                 models = Object.assign(models, obj)
 
             });
-            console.log(44, models);
 
         });
             /////////////////
 
 
-
-        this.session = new DAL(dalSettings);
+        try {
+            this.session = new DAL(dalSettings);
+        } catch (e) {
+            console.log(11,e);
+            throw e;
+        }
         return this.session.knex.raw('SELECT 1')
             .then(() => models)
             .catch((e) => {
@@ -69,7 +81,8 @@ export default class DAL {
                 user : dalSettings.user || process.env.RK_MAINDB_USER ||'postgres',
                 port: dalSettings.port || parseInt(process.env.RK_MAINDB_PORT) || 5432,
                 password : dalSettings.password || process.env.RK_MAINDB_PASS ||'password',
-                application_name: dalSettings.application_name || process.env.RK_APP_NAME || 'tstApplicationName!!!!!!'
+                //application_name:
+                //application_name: dalSettings.application_name || process.env.RK_APP_NAME || 'tstApplicationName!!!!!!'
             },
             // pool:{
             //     afterCreate: (conn, done) => {

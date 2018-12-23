@@ -15,13 +15,23 @@ Each user can have a client (web-browser instance, mobile device) that can be au
 data to be able predict user even if one accessed the side without logging in
 
 ## ENV VARIABLES
-RK_CLUSTER 0 to XX integer  
-RK_MAINDB_HOST || 'localhost'  
-RK_MAINDB_USER ||'postgres'  
-RK_MAINDB_PORT || 5432  
-RK_MAINDB_PASS ||'password'  
-RK_MAINDB_DBNAME // dbname  
-RK_APP_NAME || 'tstApplicationName!!!!!!'  
+| Env           | Default Value  | Description  |
+| ------------- |-------------| -------------|
+|RK_CLUSTER |-|0 to XX integer  |
+| // REST Section |
+|RK_REST_SERVER| - | Init or not REST Server|
+|RK_REST_SERVER_PORT|8090| port for rest server|
+|RK_REST_API_PATH| 'api' | base name for API path|
+|RK_REST_API_VERSION| '1' | api version |
+|RK_REST_API_FOLDER|8090| path to 'REST' folder |
+|RK_REST_USE_CORE_REST_FOLDER|'true'|  use './REST' folder from core (good for testing)|
+|// DB section | 
+|RK_MAINDB_HOST | 'localhost' | 
+|RK_MAINDB_USER |'postgres'  |
+|RK_MAINDB_PORT | 5432  |
+|RK_MAINDB_PASS |'password'  |
+|RK_MAINDB_DBNAME | dbname  |
+|RK_APP_NAME | 'tstApplicationName!!!!!!'  |
 
 ### TLS/SSL
 RK_USE_TSL  

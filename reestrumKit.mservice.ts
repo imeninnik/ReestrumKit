@@ -9,13 +9,14 @@ async function run() {
     const serviceName = 'verifier';
 
     const restServerSettings = {
-        port: 8000,
+        // port: 8000,
         apiPath: 'api-path',
         apiVersion: 'api-version',
         basePathToRESTFolder:'./REST/'
     };
 
-    const r = new ReestrumKit(serviceName,{ restServer:restServerSettings });
+    const r = new ReestrumKit(serviceName,{ restServer:restServerSettings, logLevel:5 });
+
 
     await r.init();
 
