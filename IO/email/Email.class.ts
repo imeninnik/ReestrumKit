@@ -1,8 +1,8 @@
 process.env.TEMPLATE_DIRECTORY=`${__dirname}/templates`;
-process.env.SENDER_EMAIL_ADDRESS='your.aws.verified.email.address@gmail.com';
-process.env.AWS_REGION='eu-west-1';
-process.env.AWS_ACCESS_KEY_ID='xxxxx';
-process.env.AWS_SECRET_ACCESS_KEY='xxxxx/yyy';
+// process.env.SENDER_EMAIL_ADDRESS='your.aws.verified.email.address@gmail.com';
+//process.env.AWS_REGION='us-west-2';
+// process.env.AWS_ACCESS_KEY_ID='xxxxx';
+// process.env.AWS_SECRET_ACCESS_KEY='xxxxx/yyy';
 
 const sendemail  = require('sendemail'); // no api key
 
@@ -18,14 +18,16 @@ export default class Email {
 
     public async sendSimple(from, to, subject, body) {
         const person = {
-            senderEmailAddress: '"Reestrum Robot" <noreply@reestrum.com>',
+            senderEmailAddress: `${from}`,
             name : "Pavel",
-            email: "p.karlovich+reestrum_test@gmail.com", // person.email can also accept an array of emails
-            subject:"Welcome to DWYL :)",
+            //email: `${from}`, // person.email can also accept an array of emails
+            email: `${to}`, // person.email can also accept an array of emails
+            subject: `${subject}`,
             pass: '#$REW$F$C'
         };
 
         this.email('hello', person, (error, result) => {
+            console.log(error);
             console.log(' - - - - - - - - - - - - - - - - - - - - -> email sent: ');
             console.log(result);
             console.log(' - - - - - - - - - - - - - - - - - - - - - - - - - - - -')

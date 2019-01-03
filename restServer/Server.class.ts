@@ -163,12 +163,15 @@ export default class Server {
                 });
 
                 this.gtInstance.logger.trace(`\n\n==== Apply REST Rules`);
-                requireFiles.forEach((rq:IRestRulesBase) => {
+                requireFiles.forEach((rq:IRestRulesBase, i) => {
+                    const fileName = files[i].split('/').slice(-1);
+                    this.gtInstance.logger.trace(`${i}. ${fileName}`);
+
                     rq.restRules.forEach((restRule:IRestRule) => {
                         const basePath = restRule.basePath ? `/${restRule.basePath}/` : '/';
 
                         const finalPath = this.fullAPIPath + basePath+restRule.path;
-                        this.gtInstance.logger.trace(`REST > ${restRule.method} > ${finalPath} \t (${restRule.description})`);
+                        this.gtInstance.logger.trace(`\t${restRule.method} > ${finalPath} \t (${restRule.description})`);
 
                         this.addRoutes(
                             restRule.method,
