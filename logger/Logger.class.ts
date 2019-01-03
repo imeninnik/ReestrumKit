@@ -1,15 +1,18 @@
 import LogMessage from './LogMessage.class';
 import MongoTransport  from './MongoTransport.class';
 import FileTransport  from './FileTransport.class';
-import { Logs } from '../dal/Models/Log.mongoose.model';
+import PostgresTransport from "./PostgresTransport.class";
+import * as mg from '../dal/Models/Log.mongoose.model';
+import Log from '../dal/Models/Log.pg.model';
 import * as tracer from 'tracer';
 import * as colors from 'colors';
+
 
 export default class Logger {
 
     public level: number = 0;
 
-    private _transports = [new MongoTransport(Logs), new FileTransport()];
+    private _transports = [new MongoTransport(mg.Logs), new FileTransport(), new PostgresTransport(Log)];
     private _tracerTrace;
     private _tracerLog;
     private _tracerInfo;
@@ -56,7 +59,8 @@ export default class Logger {
         // console.log(...args);
         this._tracerLog.log(...args);
         const logMessage = new LogMessage({component: this._component, env: this._env, level: 3}, args, 'log');
-        if (process.env.GT_PERSIST_LOW_LEVEL_LOGS) logMessage.save(...this._transports);
+        if (process.env.GT_PERSIST_LOW_LEVEL_LOGS)
+            logMessage.save(...this._transports);
 
         return logMessage;
     }

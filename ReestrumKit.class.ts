@@ -30,12 +30,10 @@ export default class ReestrumKit {
 
     constructor(private serviceName:string,  settings = null, BL?:Function) {
         if (settings) this.settings = Object.assign(this.settings, settings);
-        this.logger = new Logger(this.serviceName, process.env.NODE_ENV );
-        (settings.logLevel)
-            ? this.logger.level = settings.logLevel
-            : this.logger.level = this.logLevel;
+        // this.logger = new Logger(this.serviceName, process.env.NODE_ENV );
 
-        this.logger.trace('----------')
+        if (settings.logLevel) this.logLevel = settings.logLevel;
+
 
         if (BL && typeof BL == 'function') this.BL = BL(this);
 
@@ -53,18 +51,24 @@ export default class ReestrumKit {
     public get Helpers() { return Helpers }
 
     public async init() {
-        const s:restI.IRestServerOptions = this.settings.restServer;
-
-        if (process.env.RK_REST_SERVER && process.env.RK_RESR_SERVER=='true') await this._initRest()
-        this.restServer = new Server(this, s.port ,s.apiPath,s.apiVersion,s.basePathToRESTFolder);
-        await this.restServer.init();
-
         const m = await DAL.Init(this.settings.dal).catch(e => console.log('TODO Handle this DB Error'));
         this.Models = Object.assign(this.Models, m);
 
+        this.logger = new Logger(this.serviceName, process.env.NODE_ENV );
+        this.logger.level = this.logLevel;
 
-        this._qal = new QueueAccessLayer(this);
-        await this._qal.init().catch(e => console.log('TODO Handle this MQ Error'));
+
+        const s:restI.IRestServerOptions = this.settings.restServer;
+
+        if (process.env.RK_REST_SERVER && process.env.RK_REST_SERVER == 'true') await this._initRest(s);
+        // this.restServer = new Server(this, s.port ,s.apiPath,s.apiVersion,s.basePathToRESTFolder);
+        // await this.restServer.init();
+
+
+
+        // this._qal = new QueueAccessLayer(this);
+        // await this._qal.init().catch(e => console.log('TODO Handle this MQ Error'));
+
 
         this._IOClass = new IO(this);
 
@@ -77,14 +81,19 @@ export default class ReestrumKit {
     }
 
 
-    private async _initRest() {
+    private async _initRest(s) {
+        try {
+            const port = s.port || parseInt(process.env.RK_REST_SERVER_PORT)  || 8090;
+            const apiPath = s.apiPath || process.env.RK_REST_API_PATH || 'api';
+            const apiVersion =  s.apiVersion || process.env.RK_REST_API_VERSION || '1';
+            const basePathToRESTFolder = s.basePathToRESTFolder || process.env.RK_REST_API_FOLDER || './REST';
+            const useCoreRESTFolder = s.useCoreRESTFolder || process.env.RK_REST_USE_CORE_REST_FOLDER || 'true';
+            this.restServer = new Server(this, port, apiPath, apiVersion, basePathToRESTFolder, !!useCoreRESTFolder);
+            await this.restServer.init();
+        } catch (e) {
+            console.log(e);
+            throw e;
+        }
 
-        const port = parseInt(process.env.RK_REST_SERVER_PORT)  || 8090;
-        const apiPath = process.env.RK_REST_API_PATH || 'api';
-        const apiVersion = process.env.RK_REST_API_VERSION || '1';
-        const basePathToRESTFolder = process.env.RK_REST_API_FOLDER || './REST';
-        const useCoreRESTFolder = process.env.RK_REST_USE_CORE_REST_FOLDER || 'true';
-        this.restServer = new Server(this, port, apiPath, apiVersion, basePathToRESTFolder, !!useCoreRESTFolder);
-        await this.restServer.init();
     }
 }

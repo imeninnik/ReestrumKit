@@ -22,7 +22,7 @@ export default class LogMessage implements ILogMessage {
     }
 
     public toConsole() {
-        console[this._method](this.message, this.data || '')
+        console[this._method](this.message, this.data || '');
         if (this._method == 'error') console.log(this);
     }
 
