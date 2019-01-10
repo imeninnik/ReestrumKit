@@ -1,3 +1,4 @@
+docker run  --name reestrum-pg -v reestrum_pg:/var/lib/postgresql/data -p 5432:5432 -d postgres
 docker run --rm --name reestrum-pg -v reestrum_pg:/var/lib/postgresql/data -p 5432:5432 -d postgres
 docker run --hostname my-rabbit --name reestrum-rabbit -p 5672:5672 -d rabbitmq:3
 

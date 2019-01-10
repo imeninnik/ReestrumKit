@@ -77,7 +77,7 @@ export default class DAL {
 
             connection: {
                 host : dalSettings.host || process.env.RK_MAINDB_HOST || 'localhost',
-                database : dalSettings.database || process.env.RK_MAINDB_DBNAME ||'postgres',
+                database : dalSettings.database || process.env.RK_MAINDB_DBNAME || 'postgres',
                 user : dalSettings.user || process.env.RK_MAINDB_USER ||'postgres',
                 port: dalSettings.port || parseInt(process.env.RK_MAINDB_PORT) || 5432,
                 password : dalSettings.password || process.env.RK_MAINDB_PASS ||'password',

@@ -1,6 +1,10 @@
 import DAL from './../DAL.class';
 import * as BMHelpers from './../Helpers/BasicModel.helpers'
 
+
+let schemaName = process.env.RK_MAINDB_DBSCHEMA || '';
+if (schemaName.length) schemaName +='.';
+
 export default class BasicModel {
 
     protected static tableName:string = null;
@@ -46,7 +50,7 @@ export default class BasicModel {
     public static async Upsert(model) {
         const knex = DAL.session.knex;
 
-        const tableName  = model.constructor.tableName;
+        const tableName  = schemaName + model.constructor.tableName;
 
         const pKeys = BMHelpers.getPKeys(model.constructor['pKey']);
         const trackDateAndTime  = model.constructor['trackDateAndTime'];
@@ -77,7 +81,7 @@ export default class BasicModel {
     public static async Delete(model) {
         const knex = DAL.session.knex;
 
-        const tableName  = model.constructor.tableName;
+        const tableName  = schemaName + model.constructor.tableName;
 
         const where = {};
 
