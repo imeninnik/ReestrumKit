@@ -12,7 +12,7 @@ export default class BasicModel {
     protected static pKeyType:string = null;
     protected static autoGeneratePKey:boolean | string = false;
 
-    public id?:string;
+    public id?:string|number;
     public created_at?:string;
     public updated_at?:string;
 
