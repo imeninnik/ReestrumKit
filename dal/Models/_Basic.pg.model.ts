@@ -69,13 +69,16 @@ export default class BasicModel {
 
 
         const finalQuery = updateQuery
-            ? `${ insertQuery } ON CONFLICT (${[...pKeys]}) DO UPDATE SET ${updateQuery}`
+            ? `${ insertQuery } ON CONFLICT ${BMHelpers.getOnConflictWhileUpsert(pKeys, updateQuery, model)}`
             : `${ insertQuery }`;
 
         if (process.env.DBG_QUERY) console.log('Upsert > ',finalQuery);
 
         return knex.raw(finalQuery)
             .catch(e => console.log('Upsert error > ', e));
+
+
+
     }
 
     public static async Delete(model) {
@@ -144,11 +147,15 @@ export default class BasicModel {
         const autoGeneratePKey = this.constructor['autoGeneratePKey'];
 
         if (Array.isArray(pKey) && pKeyType && autoGeneratePKey  ) {
-            this[pKey[0]]= DAL.Helpers.getUUID();
+            this[pKey[0]] = DAL.Helpers.getUUID();
             //console.error('Primary key logic is broken, cannot auto-generate pkey if there are more that one pkey. But will assume the first one is id');
         }
 
         if (!Array.isArray(pKey) && pKeyType === 'uuid' && autoGeneratePKey) this[pKey] = DAL.Helpers.getUUID();
+
+        // if (!Array.isArray(pKey) && pKeyType.indexOf('serial') >-1 && autoGeneratePKey) this[pKey] = 'DEFAULT';
+
+
 
     }
 

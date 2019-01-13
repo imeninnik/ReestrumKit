@@ -30,6 +30,7 @@ export default class DAL {
         if (!dalSettings.user) dalSettings.user = 'postgres';
         if (!dalSettings.password) dalSettings.password = 'password';
 
+        console.log(dalSettings.pathToModels);
 
         glob(`${dalSettings['pathToModels']}/**/*.pg.model.ts`, {absolute:true}, (err, files) => {
             if (err || !files.length) {

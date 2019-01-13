@@ -26,3 +26,17 @@ export function prepareWhereStatmentForUpsert(modelPKeys:string[], tableName: st
     return output;
 }
 
+/**
+ * Return ON CONFLICT query
+ * @param pKeys
+ * @param updateQuery
+ * @param model
+ */
+export function getOnConflictWhileUpsert(pKeys: any[], updateQuery, model) {
+    // if it is sequetioal id, then just add new
+    if (model.constructor.pKeyType.indexOf('serial') > -1) return 'DO NOTHING';
+
+    // normaly update by every primary keys
+    return `(${[...pKeys]}) DO UPDATE SET ${updateQuery}`
+}
+
