@@ -5,7 +5,7 @@ import { Server } from './restServer';
 import QueueAccessLayer from "./qal/QueueAccessLayer.class";
 import IO from './IO/IO.class';
 import RestClient from './restClient/RestClient.class';
-import Logger from './Logger/Logger.class';
+import Logger from './logger/Logger.class';
 import * as Helpers from './helpers';
 import { IRKSettings, IRKSettings_DAL } from "./reestrumKit.interfaces";
 import * as IDALSettings from "./dal/DAL.interfaces";
