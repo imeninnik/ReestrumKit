@@ -6,6 +6,8 @@ export interface IRestRule {
     method: string;
     basePath?:string;
     path:string;
+    restRule?: Function[]
+    middleware?: Function[]
     controller: Function
 }
 

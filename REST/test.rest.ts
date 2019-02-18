@@ -29,6 +29,19 @@ export const restRules = [
             }
         }
     },
+    {
+        description:'test/middleware',
+        method: 'get',
+        basePath,
+        middleware: [testMiddleware1, testMiddleware2],
+        path: `middleware`,
+        controller: (rkInstance) => {
+            return (req, res, next) => {
+                return res.send({success:true, message: 'notRoot'});
+
+            }
+        }
+    },
 
 ];
 
@@ -47,4 +60,18 @@ function testPOST(rkInstance)  {
 }
 
 
+function testMiddleware1(rkInstance) {
+    return (req, res, next) => {
+        console.log('chain them');
+        req.tst = 'yep';
+        next()
+    }
 
+}
+function testMiddleware2(rkInstance) {
+    return (req, res, next) => {
+        console.log(req.tst);
+        return res.status(505).send('not Auth')
+    }
+
+}

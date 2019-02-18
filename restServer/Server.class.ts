@@ -176,7 +176,8 @@ export default class Server {
                         this.addRoutes(
                             restRule.method,
                             finalPath,
-                            restRule.controller(this.gtInstance)
+                            restRule.controller(this.gtInstance),
+                            restRule.middleware || null
                         );
 
                     });
@@ -201,7 +202,13 @@ export default class Server {
 
     }
 
-    private addRoutes(method:string = 'post', route: string, handler: Function): void {
-        this.expressApp[method](`${route}`, handler);
+    private addRoutes(method:string = 'post', route: string, handler: Function, middleware?: Function[]): void {
+        if (middleware) {
+            const md = middleware.map(m => m(this.gtInstance));
+            this.expressApp[method](`${route}`, [...md], handler)
+        } else {
+            this.expressApp[method](`${route}`, handler);
+        }
+
     }
 }
