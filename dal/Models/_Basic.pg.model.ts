@@ -19,7 +19,7 @@ export default class BasicModel {
     public static async GetAll():Promise<any> {
         const knex = DAL.session.knex;
 
-        const all = await knex(this.tableName)
+        const all = await knex(schemaName+this.tableName)
             .catch(e => console.log('GetAll', e));
 
         return this.ToModel(all);
@@ -28,7 +28,7 @@ export default class BasicModel {
     public static async GetOneByKey(key): Promise<any> {
         const knex = DAL.session.knex;
 
-        const one = await knex(this.tableName)
+        const one = await knex(schemaName+this.tableName)
             .where(this.pKey, key)
             .catch(e => console.log('GetOneByKey', e));
 
@@ -39,7 +39,7 @@ export default class BasicModel {
     public static async GetOneByKeys(keysValuesObj): Promise<any> {
         const knex = DAL.session.knex;
 
-        const one = await knex(this.tableName)
+        const one = await knex(schemaName+this.tableName)
             .where(keysValuesObj)
             .catch(e => console.log('GetOneByKeys', e));
 
@@ -95,6 +95,14 @@ export default class BasicModel {
         knex(tableName)
             .where(where)
             .del()
+    }
+
+    public static async ExecRawQuery(query:string) {
+        const knex = DAL.session.knex;
+        query = query.replace(/{{schema}}./gi, schemaName)
+
+        const result = await knex.raw(query);
+        return result.rows;
     }
 
     public static ToModel(rows:any[], one:boolean = false) {
